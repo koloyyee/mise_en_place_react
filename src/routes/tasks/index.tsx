@@ -1,32 +1,51 @@
+import { getTasks, TTask } from "@/api/task";
+import { Link, useLoaderData } from "react-router-dom";
+import { StatusIcon } from "./status-icons";
+
+export async function loader() {
+  const tasks = await getTasks();
+  return { tasks };
+}
 
 /**
  * The index page of the tasks, shows all tasks with pagination.
  */
 export default function Tasks() {
+  const { tasks }: { tasks: TTask[] } = useLoaderData();
+
 
   /***
    * All the tasks are showing in table format
    */
   return (
-      <table>
-        <thead>
+    <table>
+      <thead>
+        <tr className="text-center">
           <th> #</th>
           <th> Name</th>
-          <th> description</th>
-          <th> Assigner </th>
           <th> Assignee </th>
-        </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>Clean up the table</td>
-            <td>The database table has to be clean for every test</td>
-            <td>David</td>
-            <td>Paul</td>
+          <th className="w-[3rem]">Status </th>
+        </tr>
+      </thead>
+      <tbody>
+        {tasks.map((task, key) => (
+          <tr className="text-center" key={key}>
+            <td>{task.id}</td>
+            <td>
+              <Link to={`/app/tasks/${task.id}`}>
+                {task.name}
+              </Link>
+            </td>
+            <td>{task.assignee}</td>
+            <td className="w-1/2 flex text-center gap-2 justify-between">
+                <StatusIcon status={task.status} />
+                {task.status}
+            </td>
           </tr>
-        </tbody>
-      </table>
+        ))}
+      </tbody>
+    </table>
 
-   );
+  );
 
 }
