@@ -6,8 +6,19 @@ import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { CircleUser, ClipboardList, FilePlus, Home, Inbox, LineChart, Menu, MessageCircleMore, Package2, PackageCheck, Search, SquareUser } from "lucide-react";
-import { Link, Outlet } from "react-router-dom";
+import { useState } from "react";
+import { Link, Outlet, useOutletContext } from "react-router-dom";
 import "./app.css";
+
+type User = {
+  email: string
+};
+type ContextType = { user: User | null};
+
+export async function loader() {
+
+  return null;
+}
 
 
 /***
@@ -53,6 +64,10 @@ function RenderMenuContent({ isMobile }: { isMobile: boolean }) {
  * The Layout of the app after login.
  */
 export default function AppRoot() {
+
+  const [ user, setUser] = useState(localStorage.getItem("userEmail"));
+
+
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
@@ -115,46 +130,7 @@ export default function AppRoot() {
                     <Package2 className="h-6 w-6" />
                     <span className="sr-only">Mise en Place</span>
                   </Link>
-
                   <RenderMenuContent isMobile={true} />
-                  {/* <Link
-                    to="#"
-                    className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-                  >
-                    <Home className="h-5 w-5" />
-                    Dashboard
-                  </Link>
-                  <Link
-                    to="#"
-                    className="mx-[-0.65rem] flex items-center gap-4 rounded-xl bg-muted px-3 py-2 text-foreground hover:text-foreground"
-                  >
-                    <ShoppingCart className="h-5 w-5" />
-                    Orders
-                    <Badge className="ml-auto flex h-6 w-6 shrink-0 items-center justify-center rounded-full">
-                      6
-                    </Badge>
-                  </Link>
-                  <Link
-                    to="#"
-                    className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-                  >
-                    <Package className="h-5 w-5" />
-                    Products
-                  </Link>
-                  <Link
-                    to="#"
-                    className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-                  >
-                    <Users className="h-5 w-5" />
-                    Customers
-                  </Link>
-                  <Link
-                    to="#"
-                    className="mx-[-0.65rem] flex items-center gap-4 rounded-xl px-3 py-2 text-muted-foreground hover:text-foreground"
-                  >
-                    <LineChart className="h-5 w-5" />
-                    Analytics
-                  </Link> */}
                 </nav>
                 <div className="mt-auto">
                   <Link
@@ -197,12 +173,15 @@ export default function AppRoot() {
             </DropdownMenu>
           </header>
           <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
-            <Outlet />
+            <Outlet context={ {user} satisfies ContextType }/>
           </main>
         </div>
       </div>
     </ThemeProvider>
 
   );
+}
+export function useUser() {
+  return useOutletContext<ContextType>();
 }
 

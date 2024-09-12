@@ -1,4 +1,4 @@
-export type TTask = {
+export type TaskType = {
   id: number;
   name: string;
   description: string;
@@ -16,7 +16,7 @@ export const Urgency = Object.freeze({
   critical: "critical",
 });
 
-const tasks: TTask[] = [
+const tasks: TaskType[] = [
   {
     id: 1,
     name: "clean the table",
@@ -57,10 +57,10 @@ const tasks: TTask[] = [
 
 ]
 
-export async function getTask(taskId: number) {
+export async function geTaskType(taskId: number) {
   return tasks.find(task => task.id === taskId);
 }
 
-export async function getTasks() {
+export async function geTaskTypes() {
   return tasks;
 }

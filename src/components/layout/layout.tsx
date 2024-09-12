@@ -1,10 +1,10 @@
-import { Package2, FilePlus, Home, ShoppingCart, Badge, Package, Users, LineChart, SquareUser, Sheet, Menu, Search, CircleUser, FilePlus2 } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu";
+import { Badge, CircleUser, FilePlus, Home, LineChart, Menu, Package, Package2, Search, Sheet, ShoppingCart, SquareUser, Users } from "lucide-react";
 import { Link, Outlet } from "react-router-dom";
-import ThemeToggle from "./theme/theme-toggle";
-import { Button } from "./ui/button";
-import { Input } from "./ui/input";
-import { SheetTrigger, SheetContent } from "./ui/sheet";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import ThemeToggle from "../theme/theme-toggle";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { SheetContent, SheetTrigger } from "../ui/sheet";
 
 export default function Layout() {
 

@@ -1,9 +1,9 @@
-import { getTasks, TTask } from "@/api/task";
+import { geTaskTypes, TaskType } from "@/api/task";
 import { Link, useLoaderData } from "react-router-dom";
 import { StatusIcon } from "./status-icons";
 
 export async function loader() {
-  const tasks = await getTasks();
+  const tasks = await geTaskTypes();
   return { tasks };
 }
 
@@ -11,8 +11,7 @@ export async function loader() {
  * The index page of the tasks, shows all tasks with pagination.
  */
 export default function Tasks() {
-  const { tasks }: { tasks: TTask[] } = useLoaderData();
-
+  const { tasks } = useLoaderData() as { tasks: TaskType[] };
 
   /***
    * All the tasks are showing in table format

@@ -1,13 +1,14 @@
-import { getTask, TTask } from "@/api/task";
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+import { geTaskType, TaskType } from "@/api/task";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { useLoaderData } from "react-router-dom";
+import { Params, useLoaderData } from "react-router-dom";
 import { StatusIcon } from "./status-icons";
 
 
-export async function loader({ params }) {
-  const id = Number.parseInt(params.taskId);
-  const task = await getTask(id);
+export async function loader({ params } : {params : Params}) {
+  const id = Number.parseInt(params.taskId ?? '');
+  const task = await geTaskType(id);
   return { task };
 }
 
@@ -15,7 +16,7 @@ export async function loader({ params }) {
  * A task detail
  */
 export default function Task() {
-  const { task }: { task: TTask } = useLoaderData();
+  const { task } = useLoaderData() as { task: TaskType };
 
 
   return (
