@@ -1,3 +1,4 @@
+import CommonBreadcrumbs from "@/components/layout/breadcrumbs";
 import { useUser } from "./root";
 
 export default function Dashboard() {
@@ -5,6 +6,7 @@ export default function Dashboard() {
   console.log(user);
   return (
     <div>
+      <CommonBreadcrumbs />
       App
     </div>
   );

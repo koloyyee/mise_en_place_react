@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Params, useLoaderData } from "react-router-dom";
 import { StatusIcon } from "./status-icons";
+import CommonBreadcrumbs from "@/components/layout/breadcrumbs";
 
 
 export async function loader({ params } : {params : Params}) {
@@ -20,6 +21,8 @@ export default function Task() {
 
 
   return (
+    <>
+      <CommonBreadcrumbs />
     <main className="mt-5 grid grid-cols-12">
       {/* editable task details if the Assigner and current user are the same person */}
       <div className="col-start-2 col-span-8">
@@ -54,5 +57,6 @@ export default function Task() {
         </CardContent>
       </Card>
     </main>
+    </>
   );
 }
