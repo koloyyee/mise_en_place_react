@@ -87,6 +87,7 @@ export default function CreateTask({ isEdit }: { isEdit: boolean }) {
           <div>
             <Label htmlFor="assignee">Assignee</Label>
             <Input type="hidden" id="assignee" name="assignee" value={assignee ?? ""} />
+            <CommonCombobox setValue={setAssignee} value={assignee ?? ""} />
           </div>
         </div>
         <div className="right grid-col-3 md:col-start-7 md:col-span-3 lg:col-start-7 lg:col-span-3">
