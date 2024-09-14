@@ -1,3 +1,4 @@
+import CommonBreadcrumbs from "@/components/layout/breadcrumbs";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import ThemeToggle from "@/components/theme/theme-toggle";
 import { Button } from "@/components/ui/button";
@@ -7,13 +8,13 @@ import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from 
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { CircleUser, ClipboardList, FilePlus, Home, Inbox, LineChart, Menu, MessageCircleMore, Package2, PackageCheck, Search, SquareUser } from "lucide-react";
 import { useState } from "react";
-import { Link, Outlet, useOutletContext } from "react-router-dom";
+import { Link, Outlet, useNavigate, useOutletContext } from "react-router-dom";
 import "./app.css";
 
 type User = {
   email: string
 };
-type ContextType = { user: User | null};
+type ContextType = { user: User | null };
 
 export async function loader() {
 
@@ -65,8 +66,14 @@ function RenderMenuContent({ isMobile }: { isMobile: boolean }) {
  */
 export default function AppRoot() {
 
-  const [ user, setUser] = useState(localStorage.getItem("userEmail"));
+  const [user, setUser] = useState(localStorage.getItem("userEmail"));
+  const navigate = useNavigate();
 
+  function logout() {
+    localStorage.removeItem("userEmail");
+    setUser(null);
+    navigate("/");
+  }
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
@@ -77,7 +84,7 @@ export default function AppRoot() {
               <Link to="/" className="flex items-center gap-2 font-semibold">
                 <span className="">Mise En Place</span>
               </Link>
-              <Link to="#" className="flex items-center gap-2 font-semibold">
+              <Link to="/app/tasks/create" className="flex items-center gap-2 font-semibold">
                 <FilePlus className="h-6 w-6 " />
                 <span className="sr-only">New Ticket</span>
               </Link>
@@ -163,17 +170,20 @@ export default function AppRoot() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                <DropdownMenuLabel>Hi, {JSON.parse(user)}!</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>Settings</DropdownMenuItem>
                 <DropdownMenuItem>Support</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Logout</DropdownMenuItem>
+                <DropdownMenuItem onClick={logout}>
+                      Logout
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </header>
           <main className="flex flex-1 flex-col gap-4 p-4 lg:gap-6 lg:p-6">
-            <Outlet context={ {user} satisfies ContextType }/>
+            <CommonBreadcrumbs />
+            <Outlet context={{ user } satisfies ContextType} />
           </main>
         </div>
       </div>

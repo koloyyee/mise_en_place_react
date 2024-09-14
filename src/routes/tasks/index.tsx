@@ -18,8 +18,6 @@ export default function Tasks() {
    * All the tasks are showing in table format
    */
   return (
-    <>
-      <CommonBreadcrumbs />
       <table>
         <thead>
           <tr className="text-center">
@@ -47,8 +45,6 @@ export default function Tasks() {
           ))}
         </tbody>
       </table>
-
-    </>
   );
 
 }

@@ -21,8 +21,6 @@ export default function Task() {
 
 
   return (
-    <>
-      <CommonBreadcrumbs />
     <main className="mt-5 grid grid-cols-12">
       {/* editable task details if the Assigner and current user are the same person */}
       <div className="col-start-2 col-span-8">
@@ -57,6 +55,5 @@ export default function Task() {
         </CardContent>
       </Card>
     </main>
-    </>
   );
 }
