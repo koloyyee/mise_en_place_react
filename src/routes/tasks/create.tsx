@@ -4,67 +4,57 @@ import { Calendar } from "@/components/ui/calendar";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Task } from "@/types/task";
 import { useState } from "react";
-import { Form } from "react-router-dom";
+import { Form, useLoaderData } from "react-router-dom";
+import { useUser } from "../app/root";
 
-const users = [
-  {
-    name: "John Doe",
-    email: "john.doe@example.com",
-  },
-  {
-    name: "Jane Doe",
-    email: "jane.doe@example.com",
-  },
-  {
-    name: "John Smith",
-    email: "john.smith@example.com",
-  },
-  {
-    name: "Jane Smith",
-    email: "jane.smith@example.com",
-  },
-];
 
-export async function action({ request }: { params: Request }) {
+export async function action({ request }: { request: Request }) {
   // handle the form submission
   const formData = await request.formData() as FormData;
-  console.log(formData.entries());
+  formData.forEach((value, key) => {
+    console.log(key, value);
+  });
+  return null;
 }
 
-export default function CreateTask({ isEdit }: { isEdit: boolean }) {
-  const [openAssigner, setOpenAssigner] = useState(false);
-  const [openAssignee, setOpenAssignee] = useState(false);
+export async function loader({ params }: { params: { id: string } }) {
+  if(params.id) {
+    // const task = await getTask(params.id);
+    return { task: null };
+  }
+  console.log(params);
+  // const task = await getTask(params.id);
+  return { task : null};
+}
+
+// TODO: this should be a generic form.
+export default function CreateTask() {
+  const { task } = useLoaderData() as {task : Task | null};
+  const isEdit = task !== undefined && task !== null;
+
+  const { user } = useUser();
   const [date, setDate] = useState<Date | undefined>();
   const [assignee, setAssignee] = useState<string | undefined>();
   const [assigner, setAssigner] = useState<string | undefined>();
 
-
-  function debounceSearch(e: React.ChangeEvent<HTMLInputElement>, setUser: React.Dispatch<React.SetStateAction< string | undefined>>, timeout: number = 300) {
-
-    setTimeout(() => {
-      const name = e.target.value;
-      const target = users.find(user => user.name.toLowerCase().includes(name.toLowerCase()));
-
-      setUser(target?.email);
-    }, timeout);
-  }
-
   return (
     <>
       <h1>{isEdit ? "Edit Task" : "Create Task"}</h1>
-      <Form method="post" action="/app/tasks/create" className="grid grid-col-3 md:grid-cols-12 gap-4 grid-row-1  md:grid-rows-2">
-
+      <Form method="post" action="/app/tasks/create" className="grid grid-col-3 md:grid-cols-12 gap-4 grid-row-1">
+        <Input type="hidden" name="id" value={isEdit ? task?.id : undefined} />
         <div className="left grid-col-3  md:col-start-2 md:col-span-5 lg:col-start-3 lg:col-span-4">
-          <div>
+          <div className="">
             <Label htmlFor="name">Name</Label>
             <Input type="text" id="name" name="name" />
           </div>
-          <div>
+          <div className="my-4">
             <Label htmlFor="description">Description</Label>
-            <Input type="text" id="description" name="description" />
+            <Textarea placeholder="What's the task about?" id="description" name="description" />
           </div>
-          <div>
+          <div className="my-4">
             <Label htmlFor="status">Urgency</Label>
             <Select name="status">
               <SelectTrigger >
@@ -79,15 +69,35 @@ export default function CreateTask({ isEdit }: { isEdit: boolean }) {
               </SelectContent>
             </Select>
           </div>
-          <div>
+          <div className="mt-4 mb-2 flex flex-col gap-1 ">
             <Label htmlFor="assigner">Assigner</Label>
             <Input type="hidden" id="assigner" name="assigner" value={assigner ?? ""} />
-            <CommonCombobox setValue={setAssigner} value={assigner ?? ""} />
+            {assigner ?
+              <>
+                <p> {assigner} </p>
+                <p onClick={() => setAssigner("")}> Remove assigner </p>
+              </>
+              :
+              <>
+                <CommonCombobox setValue={setAssigner} value={assigner ?? ""} />
+                <p onClick={() => setAssigner(user?.email ?? "NOT ONE")}> Assign by me </p>
+              </>
+            }
           </div>
-          <div>
+          <div className="my-2 flex flex-col gap-1">
             <Label htmlFor="assignee">Assignee</Label>
             <Input type="hidden" id="assignee" name="assignee" value={assignee ?? ""} />
-            <CommonCombobox setValue={setAssignee} value={assignee ?? ""} />
+            {assignee ?
+              <>
+                <p> {assignee} </p>
+                <p onClick={() => setAssignee("")}> Remove assignee </p>
+              </>
+              :
+              <>
+                <CommonCombobox setValue={setAssignee} value={assignee ?? ""} />
+                <p onClick={() => setAssignee(user?.email ?? "NOT ONE")}> Assign to me </p>
+              </>
+            }
           </div>
         </div>
         <div className="right grid-col-3 md:col-start-7 md:col-span-3 lg:col-start-7 lg:col-span-3">
@@ -103,11 +113,11 @@ export default function CreateTask({ isEdit }: { isEdit: boolean }) {
             name="deadline"
             value={date ? date.toISOString() : ''}
           />
+          <Button type="submit" className="mt-4 place-content-center"> {isEdit ? "Edit" : "Create"} </Button>
         </div>
 
-        <div className="col-span-full md:col-start-7 md:col-end-10">
-          <Button type="submit" className="place-content-center"> {isEdit ? "Edit" : "Create"} </Button>
-        </div>
+        {/* <div className="col-span-full md:col-start-7 md:col-end-10 h-max"> */}
+        {/* </div> */}
       </Form>
     </>
   );

@@ -43,7 +43,8 @@ const router = createBrowserRouter([
         path: "tasks/create",
         element: <CreateTask />,
         errorElement: <ErrorPage />,
-        action: createTaskAction
+        action: createTaskAction,
+        loader: taskLoader
       },
     ],
   },

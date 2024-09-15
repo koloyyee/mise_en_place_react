@@ -4,7 +4,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Params, useLoaderData } from "react-router-dom";
 import { StatusIcon } from "./status-icons";
-import CommonBreadcrumbs from "@/components/layout/breadcrumbs";
 
 
 export async function loader({ params } : {params : Params}) {

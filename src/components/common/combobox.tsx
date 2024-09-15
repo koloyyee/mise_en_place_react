@@ -41,10 +41,10 @@ const frameworks = [
     label: "Astro",
   },
 ]
-
-export function CommonCombobox({ value, setValue} : {value: string, setValue: React.Dispatch<React.SetStateAction<string | undefined>>}) {
+// TODO: passing debounce search user goes here
+export function CommonCombobox({ value, setValue }: { value: string, setValue: React.Dispatch<React.SetStateAction<string | undefined>> }) {
   const [open, setOpen] = React.useState(false)
-  const [filteredValues, setFilteredValue] = React.useState([{value: "", label: ""}]);
+  const [filteredValues, setFilteredValue] = React.useState([{ value: "", label: "" }]);
 
   const handleValueChange = (value: string) => {
     // api search user goes here
@@ -62,30 +62,30 @@ export function CommonCombobox({ value, setValue} : {value: string, setValue: Re
         >
           {value
             ? frameworks.find((framework) => framework.value === value)?.label
-            : "Select framework..."}
+            : "Type to search..."}
           <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[200px] p-0">
         <Command>
-          <CommandInput placeholder="Search framework..." className="h-9" onValueChange={handleValueChange}/>
+          <CommandInput placeholder="Search framework..." className="h-9" onValueChange={handleValueChange} />
           <CommandList>
-            <CommandEmpty>No framework found.</CommandEmpty>
+            <CommandEmpty>Not found.</CommandEmpty>
             <CommandGroup>
-              {filteredValues.map((framework) => (
+              {filteredValues.map((el) => (
                 <CommandItem
-                  key={framework.value}
-                  value={framework.value}
+                  key={el.value}
+                  value={el.value}
                   onSelect={(currentValue) => {
                     setValue(currentValue === value ? "" : currentValue)
                     setOpen(false)
                   }}
                 >
-                  {framework.label}
+                  {el.label}
                   <CheckIcon
                     className={cn(
                       "ml-auto h-4 w-4",
-                      value === framework.value ? "opacity-100" : "opacity-0"
+                      value === el.value ? "opacity-100" : "opacity-0"
                     )}
                   />
                 </CommandItem>

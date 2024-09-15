@@ -1,7 +1,6 @@
 import { geTaskTypes, TaskType } from "@/api/task";
 import { Link, useLoaderData } from "react-router-dom";
 import { StatusIcon } from "./status-icons";
-import CommonBreadcrumbs from "@/components/layout/breadcrumbs";
 
 export async function loader() {
   const tasks = await geTaskTypes();

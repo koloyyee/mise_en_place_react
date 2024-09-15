@@ -66,7 +66,7 @@ function RenderMenuContent({ isMobile }: { isMobile: boolean }) {
  */
 export default function AppRoot() {
 
-  const [user, setUser] = useState(localStorage.getItem("userEmail"));
+  const [user, setUser] = useState<User | null>({ email: localStorage.getItem("userEmail") ?? "" });
   const navigate = useNavigate();
 
   function logout() {
@@ -170,7 +170,7 @@ export default function AppRoot() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Hi, {JSON.parse(user)}!</DropdownMenuLabel>
+                <DropdownMenuLabel>Hi, {JSON.parse(user!.email)}!</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>Settings</DropdownMenuItem>
                 <DropdownMenuItem>Support</DropdownMenuItem>
