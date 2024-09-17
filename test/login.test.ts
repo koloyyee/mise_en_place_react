@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest';
-import { login } from '../src/api/auth';
+import { login, logout } from '../src/api/auth';
 
 test("should return Email/Password is empty", async () => {
   const { resp, err } = await login("", "");
@@ -17,4 +17,10 @@ test("should return success", async () => {
   const { resp, err } = await login("hello@world.com", "password");
   expect(resp).toContain("eyJra");
   expect(err).toBe(null);
+});
+
+test("logout should remove token", () => {
+  sessionStorage.setItem("token", "test");
+  logout();
+  expect(sessionStorage.getItem("token")).toBe(null);
 });
