@@ -1,4 +1,4 @@
-import { AuthenticationError } from "@/lib/error/auth-err";
+import { AuthenticationError, IllegalArgumentError } from "@/lib/errors";
 import { redirect } from "react-router-dom";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -10,6 +10,9 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
  * @returns 
  */
 export async function login(email: string, password: string): Promise<{resp: string | null, err: Error | null}> {
+  if(email === "" || password === "") {
+    return { resp: null, err: new IllegalArgumentError("Email/Password is empty") }
+  }
 
   const resp = await fetch(`${BACKEND_URL}/auth/login`, {
     method: "POST",

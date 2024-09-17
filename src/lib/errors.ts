@@ -5,3 +5,9 @@ export class AuthenticationError extends Error {
     super("Email/Password is incorrect");
   }
 }
+
+export class IllegalArgumentError extends Error {
+  constructor(message: string) {
+    super(message);
+  }
+}
