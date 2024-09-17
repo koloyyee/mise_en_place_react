@@ -1,50 +1,59 @@
-# React + TypeScript + Vite
+# Welcome to Mise en Place.
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+This term is from a term from the French kitchen term for "in-place" and get ready for service.
 
-Currently, two official plugins are available:
+Mise en Place is a Task and Ticket Management System.
+Users are able to see the current tasks, tickets, todo, rank them in status, and see view them in table or detail format.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+This is a client side of the full-stack application, login is fully supported by OAuth2.0 JWT. Persistent storage supported by Postgresql.
 
-## Expanding the ESLint configuration
+## To Run the Project.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+### install dependencies
 
-- Configure the top-level `parserOptions` property like this:
+`pnpm install ` 
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+or
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
+ `npm install`
 
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
+### Run in dev mode (http://localhost:5173)
 
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+`pnpm run dev` 
+
+or
+
+ `npm run dev`
+
+### Run in preview mode (http://localhost:4173)
+
+`pnpm run build` 
+
+`or`
+
+`npm run build`
+
+follow by:
+`pnpm run preview` 
+
+or
+
+ `npm run preview`
+
+## Goal
+
+- User will have a dashboard to view the latest 5 todos, tickets or task.
+- User can create, read, update, delete tasks, ticket other users.
+- Assignee will get a notification after being assigned, Assigner will get notified if the task/ticket updated (status, comment, etc.).
+- User can send asynchronous message to message other users individually or group, in the system like an inbox.
+- User can initiate an instant chat with another user.
+- User can set detail profile information.
+- (optional) set different read, write privilege on different topics.
+
+## Technology
+
+- TypeScript
+- React
+- Vite
+- pnpm
+- Zustand
