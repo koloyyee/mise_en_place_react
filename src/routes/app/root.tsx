@@ -1,3 +1,4 @@
+import { getLocalToken } from "@/api";
 import CommonBreadcrumbs from "@/components/layout/breadcrumbs";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import ThemeToggle from "@/components/theme/theme-toggle";
@@ -7,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
 import { CircleUser, ClipboardList, FilePlus, Home, Inbox, LineChart, Menu, MessageCircleMore, Package2, PackageCheck, Search, SquareUser } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate, useOutletContext } from "react-router-dom";
 import "./app.css";
 
@@ -17,8 +18,7 @@ type User = {
 type ContextType = { user: User | null };
 
 export async function loader() {
-
-  return null;
+  return localStorage.getItem("token");
 }
 
 
@@ -68,6 +68,13 @@ export default function AppRoot() {
 
   const [user, setUser] = useState<User | null>({ email: localStorage.getItem("userEmail") ?? "" });
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = getLocalToken();
+    if (!token) {
+      navigate("/");
+    }
+  }, []);
 
   function logout() {
     localStorage.removeItem("userEmail");

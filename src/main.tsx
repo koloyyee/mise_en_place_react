@@ -2,7 +2,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import './index.css'
-import LandingPage, { action as loginAction } from './landing_page.tsx'
+import LoginPage, { action as loginAction } from './login.tsx'
 import ErrorPage from './routes/404.tsx'
 import Dashboard from './routes/app/dashboard.tsx'
 import AppRoot from './routes/app/root.tsx'
@@ -13,7 +13,7 @@ import Task, { loader as taskLoader } from './routes/tasks/task.tsx'
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <LandingPage />,
+    element: <LoginPage />,
     action: loginAction,
     errorElement: <ErrorPage />,
   },
