@@ -26,8 +26,8 @@ export async function loader() {
  * Understanding the app:
  * Dashboard: /app - consist of short list of tasks involved, todos, and reminder<br>
  * Task: /tasks - a detail table of tasks with assigner, assignee and other more detail information.<br>
- *       /tasks/:id - able to see the status high, mid, low, etc and other related information, deadline.
- * ToDo: /todos - a list of personal todos, status will be done, working, overdue etc.
+ *       /tasks/:id - able to see the priority high, mid, low, etc and other related information, deadline.
+ * ToDo: /todos - a list of personal todos, priority will be done, working, overdue etc.
  * Analytics: /analytics - a graph of what's has been done, or some sort of data visualisation.
  * Message: /message - synchronous message (email) sending between users on this platform
  * Chat: /chat - instead chat application.

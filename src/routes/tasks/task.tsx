@@ -3,7 +3,7 @@ import { geTaskType, TaskType } from "@/api/task";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Params, useLoaderData } from "react-router-dom";
-import { StatusIcon } from "./status-icons";
+import { PriorityIcon } from "./priority-icons";
 
 
 export async function loader({ params } : {params : Params}) {
@@ -44,11 +44,11 @@ export default function Task() {
             <p className="font-bold">{task.assigner}</p>
           </div>
           <Separator className="my-4" />
-          <div className="status">
-            <p className="text-slate-400">Status:</p>
+          <div className="priority">
+            <p className="text-slate-400">priority:</p>
             <p className="font-bold flex gap-2">
-              <StatusIcon status={task.status}/>
-              {task.status}
+              <PriorityIcon priority={task.priority}/>
+              {task.priority}
             </p>
           </div>
         </CardContent>

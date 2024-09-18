@@ -1,6 +1,6 @@
 import { geTaskTypes, TaskType } from "@/api/task";
 import { Link, useLoaderData } from "react-router-dom";
-import { StatusIcon } from "./status-icons";
+import { PriorityIcon } from "./priority-icons";
 
 export async function loader() {
   const tasks = await geTaskTypes();
@@ -23,7 +23,7 @@ export default function Tasks() {
             <th> #</th>
             <th> Name</th>
             <th> Assignee </th>
-            <th className="w-[3rem]">Status </th>
+            <th className="w-[3rem]">priority </th>
           </tr>
         </thead>
         <tbody>
@@ -37,8 +37,8 @@ export default function Tasks() {
               </td>
               <td>{task.assignee}</td>
               <td className="w-1/2 flex text-center gap-2 justify-between">
-                <StatusIcon status={task.status} />
-                {task.status}
+                <PriorityIcon priority={task.priority} />
+                {task.priority}
               </td>
             </tr>
           ))}

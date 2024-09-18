@@ -2,10 +2,10 @@ import { Urgency } from "@/api/task";
 import { Circle, CircleAlert, Diamond, Square, TriangleAlert } from "lucide-react";
 import { forwardRef } from "react";
 
-export const StatusIcon = forwardRef<HTMLDivElement, { status: string }>(
-  ({ status }, ref) => {
+export const PriorityIcon = forwardRef<HTMLDivElement, { priority: string }>(
+  ({ priority }, ref) => {
     let icon;
-    switch (status) {
+    switch (priority) {
       case Urgency.critical:
         icon = <CircleAlert color="#8B0000"/>
         break;

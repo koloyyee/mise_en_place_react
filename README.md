@@ -3,7 +3,7 @@
 This term is from a term from the French kitchen term for "in-place" and get ready for service.
 
 Mise en Place is a Task and Ticket Management System.
-Users are able to see the current tasks, tickets, todo, rank them in status, and see view them in table or detail format.
+Users are able to see the current tasks, tickets, todo, rank them in priority, and see view them in table or detail format.
 
 This is a client side of the full-stack application, login is fully supported by OAuth2.0 JWT. Persistent storage supported by Postgresql.
 
@@ -44,7 +44,7 @@ or
 
 - User will have a dashboard to view the latest 5 todos, tickets or task.
 - User can create, read, update, delete tasks, ticket other users.
-- Assignee will get a notification after being assigned, Assigner will get notified if the task/ticket updated (status, comment, etc.).
+- Assignee will get a notification after being assigned, Assigner will get notified if the task/ticket updated (priority, comment, etc.).
 - User can send asynchronous message to message other users individually or group, in the system like an inbox.
 - User can initiate an instant chat with another user.
 - User can set detail profile information.

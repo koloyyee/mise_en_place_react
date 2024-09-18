@@ -4,7 +4,7 @@ export type TaskType = {
   description: string;
   assigner: string;
   assignee: string;
-  status: string; 
+  priority: string; 
   deadline: Date;
 }
 
@@ -23,7 +23,7 @@ const tasks: TaskType[] = [
     description: "clean database after each test",
     assigner: "David",
     assignee: "Paul",
-    status: Urgency.low,
+    priority: Urgency.low,
     deadline: new Date()
   },
   // create 2 more different tasks with different urgency, name and description
@@ -33,7 +33,7 @@ const tasks: TaskType[] = [
     description: "clean database after each test",
     assigner: "George",
     assignee: "John",
-    status: Urgency.medium,
+    priority: Urgency.medium,
     deadline: new Date()
   },
   {
@@ -42,7 +42,7 @@ const tasks: TaskType[] = [
     description: "add data before each test",
     assigner: "David",
     assignee: "George",
-    status: Urgency.high,
+    priority: Urgency.high,
     deadline: new Date()
   },
   {
@@ -51,7 +51,7 @@ const tasks: TaskType[] = [
     description: "edit database after each test",
     assigner: "Mary",
     assignee: "Paul",
-    status: Urgency.urgent,
+    priority: Urgency.urgent,
     deadline: new Date()
   },
 

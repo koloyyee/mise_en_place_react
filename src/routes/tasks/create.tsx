@@ -55,8 +55,8 @@ export default function CreateTask() {
             <Textarea placeholder="What's the task about?" id="description" name="description" />
           </div>
           <div className="my-4">
-            <Label htmlFor="status">Urgency</Label>
-            <Select name="status">
+            <Label htmlFor="priority">Urgency</Label>
+            <Select name="priority">
               <SelectTrigger >
                 <SelectValue placeholder="Select urgency" />
               </SelectTrigger>
