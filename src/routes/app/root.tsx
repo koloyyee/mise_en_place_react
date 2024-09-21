@@ -1,4 +1,4 @@
-import { getLocalToken } from "@/api";
+import { getLocalToken } from "@/api/";
 import CommonBreadcrumbs from "@/components/layout/breadcrumbs";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import ThemeToggle from "@/components/theme/theme-toggle";
@@ -177,7 +177,7 @@ export default function AppRoot() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Hi, {JSON.parse(user!.email)}!</DropdownMenuLabel>
+                <DropdownMenuLabel>Hi, {user!.email}!</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem>Settings</DropdownMenuItem>
                 <DropdownMenuItem>Support</DropdownMenuItem>

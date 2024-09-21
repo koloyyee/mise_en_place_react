@@ -3,7 +3,7 @@ export type Task = {
   name: string;
   description: string;
   priority: string;
-  assigner: string;
-  assignee: string;
+  assignerEmail: string;
+  assigneeEmail: string;
   deadline: string;
 };

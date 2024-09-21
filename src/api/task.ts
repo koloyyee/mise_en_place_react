@@ -1,3 +1,5 @@
+import { get } from "./fetch";
+
 export type TaskType = {
   id: number;
   name: string;
@@ -57,8 +59,10 @@ const tasks: TaskType[] = [
 
 ]
 
-export async function geTaskType(taskId: number) {
-  return tasks.find(task => task.id === taskId);
+export async function getTaskById({taskId }: {taskId: number}) {
+  const task = await get("/tasks/" + taskId);
+  console.log(task);
+  return task;
 }
 
 export async function geTaskTypes() {

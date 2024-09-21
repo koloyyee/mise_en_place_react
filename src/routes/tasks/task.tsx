@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { geTaskType, TaskType } from "@/api/task";
+import { getTaskById, TaskType } from "@/api/task";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Params, useLoaderData } from "react-router-dom";
@@ -8,7 +8,7 @@ import { PriorityIcon } from "./priority-icons";
 
 export async function loader({ params } : {params : Params}) {
   const id = Number.parseInt(params.taskId ?? '');
-  const task = await geTaskType(id);
+  const task = await getTaskById({taskId : id});
   return { task };
 }
 
@@ -37,11 +37,11 @@ export default function Task() {
         <CardContent>
           <div className="assignee">
             <p className="text-slate-400">Assignee:</p>
-            <p className="font-bold">{task.assignee}</p>
+            <p className="font-bold">{task.assigneeEmail}</p>
           </div>
           <div className="assigner">
             <p className="text-slate-400">Assigner:</p>
-            <p className="font-bold">{task.assigner}</p>
+            <p className="font-bold">{task.assignerEmail}</p>
           </div>
           <Separator className="my-4" />
           <div className="priority">
