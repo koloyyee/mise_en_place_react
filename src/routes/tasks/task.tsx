@@ -7,6 +7,7 @@ import { PriorityIcon } from "./priority-icons";
 
 
 export async function loader({ params } : {params : Params}) {
+  console.log({params})
   const id = Number.parseInt(params.taskId ?? '');
   const task = await getTaskById({taskId : id});
   return { task };

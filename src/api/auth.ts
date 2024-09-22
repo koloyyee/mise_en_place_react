@@ -29,6 +29,7 @@ export async function login(email: string, password: string): Promise<{resp: str
   if (!token) { 
     return { resp: null, err: new AuthenticationError() } 
   };
+  localStorage.setItem("userEmail", JSON.stringify(email));
   sessionStorage.setItem("token", token);
   return { resp: token, err: null };
 

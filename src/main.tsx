@@ -6,8 +6,8 @@ import LoginPage, { action as loginAction } from './login.tsx'
 import ErrorPage from './routes/404.tsx'
 import Dashboard from './routes/app/dashboard.tsx'
 import AppRoot from './routes/app/root.tsx'
-import CreateTask, { action as createTaskAction } from './routes/tasks/create.tsx'
-import Tasks, { loader as tasksLoader } from './routes/tasks/index.tsx'
+import CreateTask, { action as createTaskAction, loader as createTaskLoader } from './routes/tasks/create.tsx'
+import Tasks, { loader as allTasksLoader } from './routes/tasks/index.tsx'
 import Task, { loader as taskLoader } from './routes/tasks/task.tsx'
 
 const router = createBrowserRouter([
@@ -31,8 +31,8 @@ const router = createBrowserRouter([
       {
         path: "tasks",
         element: <Tasks />,
-        loader: tasksLoader,
         errorElement: <ErrorPage />,
+        loader: allTasksLoader
       },
       {
         path: "tasks/:taskId",
@@ -45,7 +45,7 @@ const router = createBrowserRouter([
         element: <CreateTask />,
         errorElement: <ErrorPage />,
         action: createTaskAction,
-        loader: taskLoader
+        loader: createTaskLoader,
       },
     ],
   },

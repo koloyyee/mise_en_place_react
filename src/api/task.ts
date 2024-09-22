@@ -1,16 +1,16 @@
-import { get } from "./fetch";
+import { get, post } from "./fetch";
 
 export type TaskType = {
   id: number;
   name: string;
   description: string;
-  assigner: string;
-  assignee: string;
+  assignerEmail: string;
+  assigneeEmail: string;
   priority: string; 
   deadline: Date;
 }
 
-export const Urgency = Object.freeze({
+export const Priority = Object.freeze({
   low: "low",
   medium: "medium",
   high: "high",
@@ -18,53 +18,33 @@ export const Urgency = Object.freeze({
   critical: "critical",
 });
 
-const tasks: TaskType[] = [
-  {
-    id: 1,
-    name: "clean the table",
-    description: "clean database after each test",
-    assigner: "David",
-    assignee: "Paul",
-    priority: Urgency.low,
-    deadline: new Date()
-  },
-  // create 2 more different tasks with different urgency, name and description
-  {
-    id: 2,
-    name: "clean the database",
-    description: "clean database after each test",
-    assigner: "George",
-    assignee: "John",
-    priority: Urgency.medium,
-    deadline: new Date()
-  },
-  {
-    id: 3,
-    name: "add data",
-    description: "add data before each test",
-    assigner: "David",
-    assignee: "George",
-    priority: Urgency.high,
-    deadline: new Date()
-  },
-  {
-    id: 4,
-    name: "edit the table",
-    description: "edit database after each test",
-    assigner: "Mary",
-    assignee: "Paul",
-    priority: Urgency.urgent,
-    deadline: new Date()
-  },
-
-]
 
 export async function getTaskById({taskId }: {taskId: number}) {
+ try {
   const task = await get("/tasks/" + taskId);
-  console.log(task);
   return task;
+ } catch (error: unknown) {
+  if(error instanceof Error){
+    throw new Error(error.message);
+  }
+ } 
 }
 
-export async function geTaskTypes() {
+export async function getAllTasks() {
+  const tasks = await get("/tasks");
+  console.log(tasks);
   return tasks;
+}
+
+export async function createTask(formData: FormData) {
+ 
+  const data =  Object.fromEntries(formData);
+  try {
+    const resp = await post("/tasks", data ) 
+    return await resp.json();
+  } catch (error) {
+    if( error instanceof Error) {
+      throw new Error("unable to post new task.");
+    }
+  }
 }

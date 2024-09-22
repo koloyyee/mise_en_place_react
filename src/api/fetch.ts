@@ -1,4 +1,3 @@
-import { redirect } from "react-router-dom";
 import { getLocalToken } from ".";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -11,12 +10,6 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
  */
 export async function get(endpoint: string ) {
   const token = getLocalToken();
-  console.log("Authorization: `Bearer ${token}`");
-
-  if (!token) {
-    console.error("No token");
-    return redirect("/");
-  }
   const resp = await fetch(`${BACKEND_URL}${endpoint}`, {
     method: "GET",
     headers : {
@@ -24,7 +17,20 @@ export async function get(endpoint: string ) {
       "Authorization": `Bearer ${token}`
     }
   })
-  const data = await resp.json();
-  console.log(data);
-  return data;
+ return await resp.json();
+}
+
+
+export async function post<T>(endpoint:string, data: T) {
+
+  const token = getLocalToken();
+  const resp = await fetch(`${BACKEND_URL}${endpoint}`, {
+    method: "POST",
+    headers : {
+      "Content-Type" : "application/json",
+      "Authorization" : "Bearer " + token
+    },
+    body : JSON.stringify(data),
+  })
+  return resp;
 }

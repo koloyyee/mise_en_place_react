@@ -1,3 +1,11 @@
+import { redirect } from "react-router-dom";
+
 export function getLocalToken(){
-  return sessionStorage.getItem("token");
+  const token = sessionStorage.getItem("token");
+
+  if (!token) {
+    console.error("No token");
+    return redirect("/");
+  }
+  return token;
 }

@@ -66,7 +66,7 @@ function RenderMenuContent({ isMobile }: { isMobile: boolean }) {
  */
 export default function AppRoot() {
 
-  const [user, setUser] = useState<User | null>({ email: localStorage.getItem("userEmail") ?? "" });
+  const [user, setUser] = useState<User | null>({ email: JSON.parse(localStorage.getItem("userEmail") ?? "") });
   const navigate = useNavigate();
 
   useEffect(() => {

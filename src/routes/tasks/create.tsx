@@ -1,3 +1,4 @@
+import { createTask } from "@/api/task";
 import { CommonCombobox } from "@/components/common/combobox";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -7,27 +8,28 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Textarea } from "@/components/ui/textarea";
 import { Task } from "@/types/task";
 import { useState } from "react";
-import { Form, useLoaderData } from "react-router-dom";
+import { Form, redirect, useLoaderData } from "react-router-dom";
 import { useUser } from "../app/root";
 
 
 export async function action({ request }: { request: Request }) {
   // handle the form submission
   const formData = await request.formData() as FormData;
-  formData.forEach((value, key) => {
-    console.log(key, value);
-  });
-  return null;
+  const resp = await createTask(formData);
+  if(resp.id < 0 ) throw new Response("Server error", {status: resp.status});
+
+  return redirect("/app/tasks");
 }
 
-export async function loader({ params }: { params: { id: string } }) {
+export async function loader({ params }) {
+  const task = null;
   if(params.id) {
     // const task = await getTask(params.id);
+    console.log("editing");
     return { task: null };
   }
   console.log(params);
-  // const task = await getTask(params.id);
-  return { task : null};
+  return {task};
 }
 
 // TODO: this should be a generic form.
@@ -43,7 +45,7 @@ export default function CreateTask() {
   return (
     <>
       <h1>{isEdit ? "Edit Task" : "Create Task"}</h1>
-      <Form method="post" action="/app/tasks/create" className="grid grid-col-3 md:grid-cols-12 gap-4 grid-row-1">
+      <Form method="post" className="grid grid-col-3 md:grid-cols-12 gap-4 grid-row-1">
         <Input type="hidden" name="id" value={isEdit ? task?.id : undefined} />
         <div className="left grid-col-3  md:col-start-2 md:col-span-5 lg:col-start-3 lg:col-span-4">
           <div className="">
@@ -71,7 +73,7 @@ export default function CreateTask() {
           </div>
           <div className="mt-4 mb-2 flex flex-col gap-1 ">
             <Label htmlFor="assigner">Assigner</Label>
-            <Input type="hidden" id="assigner" name="assigner" value={assigner ?? ""} />
+            <Input type="hidden" id="assigner" name="assignerEmail" value={assigner ?? ""} />
             {assigner ?
               <>
                 <p> {assigner} </p>
@@ -86,7 +88,7 @@ export default function CreateTask() {
           </div>
           <div className="my-2 flex flex-col gap-1">
             <Label htmlFor="assignee">Assignee</Label>
-            <Input type="hidden" id="assignee" name="assignee" value={assignee ?? ""} />
+            <Input type="hidden" id="assignee" name="assigneeEmail" value={assignee ?? ""} />
             {assignee ?
               <>
                 <p> {assignee} </p>

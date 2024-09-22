@@ -1,4 +1,4 @@
-import { Urgency } from "@/api/task";
+import { Priority } from "@/api/task";
 import { Circle, CircleAlert, Diamond, Square, TriangleAlert } from "lucide-react";
 import { forwardRef } from "react";
 
@@ -6,19 +6,19 @@ export const PriorityIcon = forwardRef<HTMLDivElement, { priority: string }>(
   ({ priority }, ref) => {
     let icon;
     switch (priority) {
-      case Urgency.critical:
+      case Priority.critical:
         icon = <CircleAlert color="#8B0000"/>
         break;
-      case Urgency.urgent:
+      case Priority.urgent:
         icon = <TriangleAlert color="#FF6347" />
         break;
-      case Urgency.high:
+      case Priority.high:
         icon = <Circle color="#FFD700" />
         break;
-      case Urgency.medium:
+      case Priority.medium:
         icon = <Square color="#3F00FF" />
         break;
-      case Urgency.low:
+      case Priority.low:
         icon = <Diamond color="#808080" />
         break;
       default:

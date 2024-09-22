@@ -1,9 +1,9 @@
-import { geTaskTypes, TaskType } from "@/api/task";
+import { getAllTasks, TaskType } from "@/api/task";
 import { Link, useLoaderData } from "react-router-dom";
 import { PriorityIcon } from "./priority-icons";
 
 export async function loader() {
-  const tasks = await geTaskTypes();
+  const tasks = await getAllTasks();
   return { tasks };
 }
 
@@ -35,7 +35,7 @@ export default function Tasks() {
                   {task.name}
                 </Link>
               </td>
-              <td>{task.assignee}</td>
+              <td>{task.assigneeEmail}</td>
               <td className="w-1/2 flex text-center gap-2 justify-between">
                 <PriorityIcon priority={task.priority} />
                 {task.priority}
