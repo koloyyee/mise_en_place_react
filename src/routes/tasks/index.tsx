@@ -1,9 +1,12 @@
 import { getAllTasks, TaskType } from "@/api/task";
-import { Link, useLoaderData } from "react-router-dom";
+import { Link, redirect, useLoaderData } from "react-router-dom";
 import { PriorityIcon } from "./priority-icons";
 
 export async function loader() {
   const tasks = await getAllTasks();
+  if( tasks.status ) {
+    return redirect("/");
+  }
   return { tasks };
 }
 

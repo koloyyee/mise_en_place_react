@@ -6,9 +6,11 @@ import LoginPage, { action as loginAction } from './login.tsx'
 import ErrorPage from './routes/404.tsx'
 import Dashboard from './routes/app/dashboard.tsx'
 import AppRoot from './routes/app/root.tsx'
-import CreateTask, { action as createTaskAction, loader as createTaskLoader } from './routes/tasks/create.tsx'
+import CreateTask, { action as createTaskAction } from './routes/tasks/create.tsx'
+import EditTask, { action as editTaskAction, loader as editTaskLoader } from './routes/tasks/edit.tsx'
 import Tasks, { loader as allTasksLoader } from './routes/tasks/index.tsx'
 import Task, { loader as taskLoader } from './routes/tasks/task.tsx'
+
 
 const router = createBrowserRouter([
   {
@@ -45,7 +47,13 @@ const router = createBrowserRouter([
         element: <CreateTask />,
         errorElement: <ErrorPage />,
         action: createTaskAction,
-        loader: createTaskLoader,
+      },
+      {
+        path: "tasks/edit/:taskId",
+        element: <EditTask/>,
+        errorElement: <ErrorPage />,
+        action: editTaskAction,
+        loader: editTaskLoader,
       },
     ],
   },

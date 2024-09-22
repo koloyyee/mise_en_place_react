@@ -1,16 +1,21 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { getTaskById, TaskType } from "@/api/task";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Params, useLoaderData } from "react-router-dom";
+import { Link, Params, redirect, useLoaderData } from "react-router-dom";
 import { PriorityIcon } from "./priority-icons";
 
 
-export async function loader({ params } : {params : Params}) {
-  console.log({params})
+export async function loader({ params }: { params: Params }) {
   const id = Number.parseInt(params.taskId ?? '');
-  const task = await getTaskById({taskId : id});
-  return { task };
+  const task = await getTaskById({ taskId: id });
+  console.log({task})
+  if (task.status > 300) {
+    return redirect("/");
+  } else {
+    return { task };
+  }
 }
 
 /**
@@ -29,7 +34,9 @@ export default function Task() {
       </div>
 
       {/* A sticky detail side  */}
-
+      <Button> 
+        <Link to={`/app/tasks/edit/${task.id}`}> Edit</Link>
+      </Button>
       {/* fixed top-[3rem] right-[2rem] */}
       <Card className="w-[16rem] h-max col-start-10 col-end-12 ">
         <CardHeader>
@@ -48,7 +55,7 @@ export default function Task() {
           <div className="priority">
             <p className="text-slate-400">priority:</p>
             <p className="font-bold flex gap-2">
-              <PriorityIcon priority={task.priority}/>
+              <PriorityIcon priority={task.priority} />
               {task.priority}
             </p>
           </div>
