@@ -1,6 +1,7 @@
 import { getAllTasks, TaskType } from "@/api/task";
-import { Link, redirect, useLoaderData } from "react-router-dom";
-import { PriorityIcon } from "./priority-icons";
+import { DataTable } from "@/components/common/data-table";
+import { columns } from "@/components/tasks/column";
+import { redirect, useLoaderData } from "react-router-dom";
 
 export async function loader() {
   const tasks = await getAllTasks();
@@ -19,34 +20,38 @@ export default function Tasks() {
   /***
    * All the tasks are showing in table format
    */
+  // return (
+  //     <table>
+  //       <thead>
+  //         <tr className="text-center">
+  //           <th> #</th>
+  //           <th> Name</th>
+  //           <th> Assignee </th>
+  //           <th className="w-[3rem]">priority </th>
+  //         </tr>
+  //       </thead>
+  //       <tbody>
+  //         {tasks.map((task, key) => (
+  //           <tr className="text-center" key={key}>
+  //             <td>{task.id}</td>
+  //             <td>
+  //               <Link to={`/app/tasks/${task.id}`}>
+  //                 {task.name}
+  //               </Link>
+  //             </td>
+  //             <td>{task.assigneeEmail}</td>
+  //             <td className="w-1/2 flex text-center gap-2 justify-between">
+  //               <PriorityIcon priority={task.priority} />
+  //               {task.priority}
+  //             </td>
+  //           </tr>
+  //         ))}
+  //       </tbody>
+  //     </table>
+  // );
   return (
-      <table>
-        <thead>
-          <tr className="text-center">
-            <th> #</th>
-            <th> Name</th>
-            <th> Assignee </th>
-            <th className="w-[3rem]">priority </th>
-          </tr>
-        </thead>
-        <tbody>
-          {tasks.map((task, key) => (
-            <tr className="text-center" key={key}>
-              <td>{task.id}</td>
-              <td>
-                <Link to={`/app/tasks/${task.id}`}>
-                  {task.name}
-                </Link>
-              </td>
-              <td>{task.assigneeEmail}</td>
-              <td className="w-1/2 flex text-center gap-2 justify-between">
-                <PriorityIcon priority={task.priority} />
-                {task.priority}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-  );
-
+    <div className="container mx-auto py-10">
+    <DataTable columns={columns} data={tasks} />
+  </div>
+  )
 }

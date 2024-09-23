@@ -1,12 +1,14 @@
 import { del, get, post, put } from "./fetch";
 
+
 export type TaskType = {
   id: number;
   name: string;
   description: string;
   assignerEmail: string;
   assigneeEmail: string;
-  priority: string;
+  priority: "low" | "medium" | "high" | "urgent" | "critical";
+  status: "todo" | "done" | "delay";
   deadline: Date;
 }
 
@@ -32,13 +34,13 @@ export async function getTaskById({ taskId }: { taskId: number }) {
 
 export async function getAllTasks() {
   const tasks = await get("/tasks");
-  console.log(tasks);
   return tasks;
 }
 
 export async function createTask({ formData }: { formData: FormData }) {
 
   const data = Object.fromEntries(formData);
+
   if (data == null) return;
   try {
     const resp = await post("/tasks", data)

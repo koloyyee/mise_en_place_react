@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Link, Params, redirect, useLoaderData } from "react-router-dom";
-import { PriorityIcon } from "./priority-icons";
+import { PriorityIcon } from "../../components/tasks/priority-icons";
 
 
 export async function loader({ params }: { params: Params }) {

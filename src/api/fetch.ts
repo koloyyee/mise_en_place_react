@@ -9,7 +9,7 @@ export const HttpMethod = Object.freeze({
   Delete: "DELETE",
   Patch: "PATCH"
 });
-const { Post, Get, Put, Delete, Patch } = HttpMethod;
+const { Post, Get, Put, Delete } = HttpMethod;
 /**
  * 
  * @param endpoint - make sure to have the / e.g.: "/tasks" or "/todo/2".
