@@ -10,6 +10,7 @@ import CreateTask, { action as createTaskAction } from './routes/tasks/create.ts
 import EditTask, { action as editTaskAction, loader as editTaskLoader } from './routes/tasks/edit.tsx'
 import Tasks, { loader as allTasksLoader } from './routes/tasks/index.tsx'
 import Task, { loader as taskLoader } from './routes/tasks/task.tsx'
+import Settings, { action as settingsAction, loader as settingsLoader } from './routes/users/settings.tsx'
 
 
 const router = createBrowserRouter([
@@ -30,6 +31,7 @@ const router = createBrowserRouter([
         element: <Dashboard />,
         errorElement: <ErrorPage />,
       },
+      // Tasks 
       {
         path: "tasks",
         element: <Tasks />,
@@ -54,6 +56,14 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage />,
         action: editTaskAction,
         loader: editTaskLoader,
+      },
+      // User Settings 
+      {
+        path: "settings",
+        element: <Settings/>,
+        errorElement: <ErrorPage />,
+        loader: settingsLoader,
+        action: settingsAction
       },
     ],
   },

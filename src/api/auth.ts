@@ -1,5 +1,5 @@
 import { AuthenticationError, IllegalArgumentError } from "@/lib/errors";
-import { redirect } from "react-router-dom";
+import { getUserByUsername } from "./user";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
@@ -9,8 +9,8 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
  * @param password 
  * @returns 
  */
-export async function login(email: string, password: string): Promise<{resp: string | null, err: Error | null}> {
-  if(email === "" || password === "") {
+export async function login(email: string, password: string): Promise<{ resp: string | null, err: Error | null }> {
+  if (email === "" || password === "") {
     return { resp: null, err: new IllegalArgumentError("Email/Password is empty") }
   }
 
@@ -26,18 +26,15 @@ export async function login(email: string, password: string): Promise<{resp: str
     })
   })
   const token = await resp.text();
-  if (!token) { 
-    return { resp: null, err: new AuthenticationError() } 
+  if (!token) {
+    return { resp: null, err: new AuthenticationError() }
   };
-  localStorage.setItem("userEmail", JSON.stringify(email));
   sessionStorage.setItem("token", token);
+
+  const user = await getUserByUsername(email);
+  localStorage.setItem("user", JSON.stringify(user.data));
+
   return { resp: token, err: null };
 
-
 }
 
-
-export function logout() {
-  sessionStorage.removeItem("token");
-  return redirect("/");
-}

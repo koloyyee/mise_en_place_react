@@ -1,5 +1,5 @@
 import { getLocalToken } from "@/api/";
-import { logout } from "@/api/auth";
+import { UserType } from "@/api/user";
 import CommonBreadcrumbs from "@/components/layout/breadcrumbs";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import ThemeToggle from "@/components/theme/theme-toggle";
@@ -13,10 +13,7 @@ import { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate, useOutletContext } from "react-router-dom";
 import "./app.css";
 
-type User = {
-  email: string
-};
-type ContextType = { user: User | null };
+type ContextType = { user: UserType | null };
 
 export async function loader() {
   return getLocalToken();
@@ -67,7 +64,7 @@ function RenderMenuContent({ isMobile }: { isMobile: boolean }) {
  */
 export default function AppRoot() {
 
-  const [user] = useState<User | null>({ email: JSON.parse(localStorage.getItem("userEmail") ?? "") });
+  const [user] = useState<UserType | null>(JSON.parse(localStorage.getItem("user") ?? ""));
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -77,6 +74,11 @@ export default function AppRoot() {
     }
   }, [navigate]);
 
+  function logout() {
+    sessionStorage.clear();
+    localStorage.removeItem("user");
+    navigate("/");
+  }
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
       <div className="grid min-h-screen w-full md:grid-cols-[220px_1fr] lg:grid-cols-[280px_1fr]">
@@ -172,13 +174,15 @@ export default function AppRoot() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuLabel>Hi, {user!.email}!</DropdownMenuLabel>
+                <DropdownMenuLabel>Hi, {user!.firstName}!</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>Settings</DropdownMenuItem>
+                <Link to="/app/settings">
+                  <DropdownMenuItem>Settings</DropdownMenuItem>
+                </Link>
                 <DropdownMenuItem>Support</DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem onClick={logout}>
-                      Logout
+                <DropdownMenuItem onClick={() => logout()}>
+                  Logout
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
