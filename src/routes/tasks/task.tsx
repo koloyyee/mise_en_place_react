@@ -10,8 +10,7 @@ import { PriorityIcon } from "../../components/tasks/priority-icons";
 export async function loader({ params }: { params: Params }) {
   const id = Number.parseInt(params.taskId ?? '');
   const task = await getTaskById({ taskId: id });
-  console.log({task})
-  if (task.status > 300) {
+  if (task instanceof Error) {
     return redirect("/");
   } else {
     return { task };
@@ -34,9 +33,11 @@ export default function Task() {
       </div>
 
       {/* A sticky detail side  */}
-      <Button> 
-        <Link to={`/app/tasks/edit/${task.id}`}> Edit</Link>
-      </Button>
+      <Link to={`/app/tasks/edit/${task.id}`}>
+        <Button>
+          Edit
+        </Button>
+      </Link>
       {/* fixed top-[3rem] right-[2rem] */}
       <Card className="w-[16rem] h-max col-start-10 col-end-12 ">
         <CardHeader>

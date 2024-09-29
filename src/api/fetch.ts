@@ -15,7 +15,7 @@ const { Post, Get, Put, Delete } = HttpMethod;
  * @param endpoint - make sure to have the / e.g.: "/tasks" or "/todo/2".
  * @returns Task
  */
-export async function get(endpoint: string) {
+export async function get<T>(endpoint: string): Promise<T | T[] | Response | undefined> {
   const resp = await fetch(BACKEND_URL + endpoint, {
     method: Get,
     headers: {
@@ -23,14 +23,7 @@ export async function get(endpoint: string) {
       "Authorization": "Bearer " + getLocalToken()
     }
   })
-
-  try {
-    return await resp.json();
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Response("Unusual situation", { status: resp.status });
-    }
-  }
+  return resp;
 }
 
 
@@ -47,6 +40,7 @@ export async function post<T>(endpoint: string, data: T) {
 }
 
 export async function put<T>(endpoint: string, data: T) {
+  console.log({data})
   const resp = await fetch(BACKEND_URL + endpoint, {
     method: Put,
     headers: {

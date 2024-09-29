@@ -1,4 +1,5 @@
 import { getLocalToken } from "@/api/";
+import { logout } from "@/api/auth";
 import CommonBreadcrumbs from "@/components/layout/breadcrumbs";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import ThemeToggle from "@/components/theme/theme-toggle";
@@ -18,7 +19,7 @@ type User = {
 type ContextType = { user: User | null };
 
 export async function loader() {
-  return localStorage.getItem("token");
+  return getLocalToken();
 }
 
 
@@ -74,13 +75,7 @@ export default function AppRoot() {
     if (!token) {
       navigate("/");
     }
-  }, []);
-
-  function logout() {
-    localStorage.removeItem("userEmail");
-    setUser(null);
-    navigate("/");
-  }
+  }, [navigate]);
 
   return (
     <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">

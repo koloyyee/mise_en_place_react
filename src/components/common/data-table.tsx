@@ -42,7 +42,6 @@ export function DataTable<TData extends { id: number; }, TValue>({ columns, data
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => {
-              console.log(row)
               return (
                 <TableRow className="hover:cursor-pointer" key={row.id} data-state={row.getIsSelected() && "selected"} onClick={() => gotoDetail({id : row.original.id })}>
                   {row.getVisibleCells().map((cell) => (
@@ -53,8 +52,7 @@ export function DataTable<TData extends { id: number; }, TValue>({ columns, data
                 </TableRow>
 
               )
-            }
-            )
+            })
           )
             : (
               <TableRow>

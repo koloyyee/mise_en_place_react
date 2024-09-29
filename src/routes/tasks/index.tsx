@@ -1,21 +1,26 @@
 import { getAllTasks, TaskType } from "@/api/task";
 import { DataTable } from "@/components/common/data-table";
 import { columns } from "@/components/tasks/column";
-import { redirect, useLoaderData } from "react-router-dom";
+import { useEffect } from "react";
+import { useLoaderData, useNavigate } from "react-router-dom";
 
 export async function loader() {
-  const tasks = await getAllTasks();
-  if( tasks.status ) {
-    return redirect("/");
-  }
-  return { tasks };
+  const tasks = await getAllTasks() as Response;
+  return { tasks: await tasks.json(), ok : tasks.ok };
 }
 
 /**
  * The index page of the tasks, shows all tasks with pagination.
  */
 export default function Tasks() {
-  const { tasks } = useLoaderData() as { tasks: TaskType[] };
+  const navigate = useNavigate();
+  const { tasks, ok } = useLoaderData()as {tasks: TaskType[], ok: boolean};
+
+  useEffect(() => {
+    if (!ok) {
+      navigate("/");
+    } 
+  }, [navigate])
 
   /***
    * All the tasks are showing in table format
@@ -51,7 +56,7 @@ export default function Tasks() {
   // );
   return (
     <div className="container mx-auto py-10">
-    <DataTable columns={columns} data={tasks} />
-  </div>
+      <DataTable columns={columns} data={tasks} />
+    </div>
   )
 }

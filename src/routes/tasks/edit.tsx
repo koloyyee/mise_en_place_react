@@ -7,9 +7,12 @@ export async function action({ request }: { request: Request }) {
   const formData = await request.formData();
   switch (request.method) {
     case HttpMethod.Put: {
-      console.log(Object.fromEntries(formData));
       const resp = await updateTask({ formData });
-      return resp;
+      console.log(resp)
+      if(resp?.ok) {
+        return redirect("/app/tasks/" + formData.get("id"));
+      }
+      return null;
     }
     case HttpMethod.Delete: {
       const id = formData.get("id") as string;

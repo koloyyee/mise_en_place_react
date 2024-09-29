@@ -1,5 +1,6 @@
 import { TaskType } from "@/api/task";
 import { useUser } from "@/routes/app/root";
+import { DateTime } from "luxon";
 import { useState } from "react";
 import { Form } from "react-router-dom";
 import { CommonCombobox } from "../common/combobox";
@@ -18,7 +19,7 @@ interface TaskFormBodyProps {
 export default function TaskFormBody({ isEdit = false, task }: TaskFormBodyProps) {
 
   const { user } = useUser();
-  const [date, setDate] = useState<Date | undefined>(task?.deadline);
+  const [date, setDate] = useState<Date | undefined>(DateTime.fromISO(task!.deadline).toJSDate());
   const [assignee, setAssignee] = useState<string | undefined>(task?.assigneeEmail ?? "");
   const [assigner, setAssigner] = useState<string | undefined>(task?.assignerEmail ?? "");
 
@@ -62,7 +63,7 @@ export default function TaskFormBody({ isEdit = false, task }: TaskFormBodyProps
               </>
               :
               <>
-                <CommonCombobox setValue={setAssigner} value={assigner ?? ""} />
+                <CommonCombobox setValue={setAssigner} value={assigner ?? ""}  />
                 <p onClick={() => setAssigner(user?.email ?? "NOT ONE")}> Assign by me </p>
               </>
             }

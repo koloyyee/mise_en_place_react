@@ -1,3 +1,4 @@
+import { DateTime } from "luxon";
 import { del, get, post, put } from "./fetch";
 
 
@@ -9,7 +10,7 @@ export type TaskType = {
   assigneeEmail: string;
   priority: "low" | "medium" | "high" | "urgent" | "critical";
   status: "todo" | "done" | "delay";
-  deadline: Date;
+  deadline: string; // return as ISO format 
 }
 
 export const Priority = Object.freeze({
@@ -21,20 +22,20 @@ export const Priority = Object.freeze({
 });
 
 
-export async function getTaskById({ taskId }: { taskId: number }) {
+export async function getTaskById({ taskId }: { taskId: number }): Promise<TaskType | Error | null> {
   try {
-    const task = await get("/tasks/" + taskId);
-    return task;
+    const task = await get<TaskType>("/tasks/" + taskId) as Response;
+    return task.json();
   } catch (error: unknown) {
     if (error instanceof Error) {
       throw new Error(error.message);
     }
   }
+  return null;
 }
 
 export async function getAllTasks() {
-  const tasks = await get("/tasks");
-  return tasks;
+   return await get<TaskType>("/tasks");
 }
 
 export async function createTask({ formData }: { formData: FormData }) {
@@ -54,19 +55,25 @@ export async function createTask({ formData }: { formData: FormData }) {
 
 export async function updateTask({ formData }: { formData: FormData }) {
 
-  const data = Object.fromEntries(formData);
   const id = formData.get("id");
+
+  const date = formData.get("deadline") as string;
+  const parsedDate = DateTime.fromFormat(date, "dd/MM/yyyy, HH:mm:ss");
+  const formattedDate = parsedDate.toFormat("yyyy-MM-dd'T'HH:mm:ss");
+  formData.set("deadline", formattedDate);
+
+  const data = Object.fromEntries(formData);
+
   if (data === null || id === null) return;
 
   const resp = await put(`/tasks/${id}`, data);
   try {
-    console.log(resp);
-    const json = await resp.json();
-    console.log(json);
-    if (json.status !== 200) {
+
+    if (!resp.ok) {
       throw new Error("can't update.");
     }
-    return resp.text;
+    return resp;
+
   } catch (error) {
     if (error instanceof Error) {
       throw new Response(error.message, { status: resp.status });
