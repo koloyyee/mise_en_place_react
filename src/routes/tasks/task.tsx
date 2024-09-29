@@ -1,28 +1,29 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
-import { getTaskById, TaskType } from "@/api/task";
+import { getTaskById, TaskResponseType, TaskType } from "@/api/task";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { Link, Params, redirect, useLoaderData } from "react-router-dom";
+import { Link, Params, useLoaderData, useNavigate } from "react-router-dom";
 import { PriorityIcon } from "../../components/tasks/priority-icons";
 
 
 export async function loader({ params }: { params: Params }) {
   const id = Number.parseInt(params.taskId ?? '');
-  const task = await getTaskById({ taskId: id });
-  if (task instanceof Error) {
-    return redirect("/");
-  } else {
-    return { task };
-  }
+  const resp = await getTaskById({ taskId: id }) as TaskResponseType;
+  return { resp };
 }
 
 /**
  * A task detail
  */
 export default function Task() {
-  const { task } = useLoaderData() as { task: TaskType };
+  const { resp } = useLoaderData() as { resp: TaskResponseType };
+  const navigate = useNavigate();
 
+  if(!resp.ok && resp.data ) {
+   navigate("/app/tasks")
+  } 
+  const task = resp.data as TaskType; 
 
   return (
     <main className="mt-5 grid grid-cols-12">

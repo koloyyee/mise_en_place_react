@@ -17,13 +17,7 @@ export type UserType = {
  * or first and/or last name
  * @param username - the username is the email of the user.
  */
-export async function getAllUsersByUsername({ username = "" }: { username: string }): Promise<UserType[] | Error | null> {
-  try {
-    return await get<UserType>("/users/q?" + new URLSearchParams({ username: username }).toString()) as UserType[];
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
-    }
-  }
-  return null;
+export async function getAllUsersByUsername({ username = "" }: { username: string }): Promise<{data: UserType[] | null, ok: boolean}> {
+    const resp = await get("/users/q?" + new URLSearchParams({ username: username }).toString()) ;
+    return {data : await resp.json(), ok: resp.ok};
 }

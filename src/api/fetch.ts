@@ -15,7 +15,7 @@ const { Post, Get, Put, Delete } = HttpMethod;
  * @param endpoint - make sure to have the / e.g.: "/tasks" or "/todo/2".
  * @returns Task
  */
-export async function get<T>(endpoint: string): Promise<T | T[] | Response | undefined> {
+export async function get(endpoint: string): Promise<Response> {
   const resp = await fetch(BACKEND_URL + endpoint, {
     method: Get,
     headers: {
@@ -23,6 +23,12 @@ export async function get<T>(endpoint: string): Promise<T | T[] | Response | und
       "Authorization": "Bearer " + getLocalToken()
     }
   })
+  if (resp.status === 401) {
+    // Handle 401 Unauthorized
+    console.error("Unauthorized access - redirecting to login.");
+    // Redirect to login page or perform other actions
+    window.location.href = "/";
+  }
   return resp;
 }
 

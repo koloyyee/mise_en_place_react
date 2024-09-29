@@ -31,9 +31,10 @@ export function CommonCombobox({ value, setValue }: { value: string, setValue: R
       setFilteredValue([]);
     } else {
       setTimeout(async () => {
-        const result: UserType[] = await getAllUsersByUsername({ username: value }) as UserType[];
-        console.log(result);
-        setFilteredValue(result);
+        const resp = await getAllUsersByUsername({ username: value }) as { data: UserType[] | null, ok: boolean };
+        if (resp.ok && resp.data) {
+          setFilteredValue(resp.data);
+        }
       }, timeoutMs);
     }
   }

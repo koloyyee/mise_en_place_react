@@ -1,12 +1,12 @@
-import { getAllTasks, TaskType } from "@/api/task";
+import { getAllTasks, TaskResponseType, TaskType } from "@/api/task";
 import { DataTable } from "@/components/common/data-table";
 import { columns } from "@/components/tasks/column";
 import { useEffect } from "react";
 import { useLoaderData, useNavigate } from "react-router-dom";
 
 export async function loader() {
-  const tasks = await getAllTasks() as Response;
-  return { tasks: await tasks.json(), ok : tasks.ok };
+  const resp = await getAllTasks();
+  return { resp };
 }
 
 /**
@@ -14,14 +14,14 @@ export async function loader() {
  */
 export default function Tasks() {
   const navigate = useNavigate();
-  const { tasks, ok } = useLoaderData()as {tasks: TaskType[], ok: boolean};
-
+  const { resp } = useLoaderData() as {resp : TaskResponseType };
+  const tasks = resp.data as TaskType[];
   useEffect(() => {
-    if (!ok) {
+    if (!resp.ok) {
       navigate("/");
     } 
   }, [navigate])
-
+  
   /***
    * All the tasks are showing in table format
    */

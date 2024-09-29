@@ -8,34 +8,41 @@ export type TaskType = {
   description: string;
   assignerEmail: string;
   assigneeEmail: string;
-  priority: "low" | "medium" | "high" | "urgent" | "critical";
-  status: "todo" | "done" | "delay";
+  priority: typeof Priority;
+  status: typeof TaskStatus;
   deadline: string; // return as ISO format 
 }
 
-export const Priority = Object.freeze({
+export const TaskStatus = {
+  todo: "todo",
+  done: "done",
+  delay: "delay",
+  cancelled: "cancelled",
+  unavailable: "unavailable"
+} as const;
+
+
+export const Priority = {
   low: "low",
   medium: "medium",
   high: "high",
   urgent: "urgent",
   critical: "critical",
-});
+} as const;
 
-
-export async function getTaskById({ taskId }: { taskId: number }): Promise<TaskType | Error | null> {
-  try {
-    const task = await get<TaskType>("/tasks/" + taskId) as Response;
-    return task.json();
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      throw new Error(error.message);
-    }
-  }
-  return null;
+export type TaskResponseType = {
+  data: TaskType | TaskType[] | null,
+  ok: boolean
 }
 
-export async function getAllTasks() {
-   return await get<TaskType>("/tasks");
+export async function getTaskById({ taskId }: { taskId: number }): Promise<TaskResponseType> {
+  const resp = await get("/tasks/" + taskId);
+  return { data: await resp.json() as TaskType | null, ok: resp.ok }
+}
+
+export async function getAllTasks(): Promise<TaskResponseType>  {
+  const resp  = await get("/tasks");
+  return { data: await resp.json() as TaskType | null, ok: resp.ok }
 }
 
 export async function createTask({ formData }: { formData: FormData }) {
@@ -80,6 +87,8 @@ export async function updateTask({ formData }: { formData: FormData }) {
     }
   }
 }
+
+
 
 export async function deleteTask(taskId: string) {
   try {

@@ -1,7 +1,8 @@
 import { HttpMethod } from "@/api/fetch";
 import { deleteTask, getTaskById, TaskType, updateTask } from "@/api/task";
 import TaskFormBody from "@/components/tasks/form-body";
-import { Params, redirect, useLoaderData } from "react-router-dom";
+import { useEffect } from "react";
+import { Params, redirect, useLoaderData, useNavigate } from "react-router-dom";
 
 export async function action({ request }: { request: Request }) {
   const formData = await request.formData();
@@ -28,11 +29,20 @@ export async function action({ request }: { request: Request }) {
 
 export async function loader({ params }: { params: Params }) {
   const id = Number.parseInt(params.taskId ?? "");
-  const task = await getTaskById({ taskId: id });
-  return { task }
+  const data = await getTaskById({ taskId: id });
+  console.log(data)
+  return { data }
 }
 
 export default function EditTask() {
-  const { task } = useLoaderData() as { task: TaskType };
-  return <TaskFormBody isEdit={true} task={task} />
+  const { data } = useLoaderData() as { data: {task: TaskType, ok:boolean }};
+  const navigate = useNavigate();
+
+  console.log( {data});
+  useEffect(() => {
+    if(!data.ok) {
+     navigate("/");
+    }
+  }, [navigate])
+  return <TaskFormBody isEdit={true} task={data.task} />
 }
