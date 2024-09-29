@@ -176,9 +176,9 @@ export default function AppRoot() {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Hi, {user!.firstName}!</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <Link to="/app/settings">
-                  <DropdownMenuItem>Settings</DropdownMenuItem>
-                </Link>
+
+                  <DropdownMenuItem className="hover:cursor-pointer" onSelect={() => navigate("/app/settings")}>Settings</DropdownMenuItem>
+
                 <DropdownMenuItem>Support</DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => logout()}>
