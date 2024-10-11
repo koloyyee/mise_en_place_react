@@ -1,4 +1,5 @@
 import { DateTime } from "luxon";
+import { z } from "zod";
 import { del, get, post, put } from "./fetch";
 
 
@@ -8,10 +9,21 @@ export type TaskType = {
   description: string;
   assignerEmail: string;
   assigneeEmail: string;
-  priority: typeof Priority;
-  status: typeof TaskStatus;
+  priority: "low" | "medium" | "high" | "urgent" | "critical";
+  status: "todo" | "done" | "delay" | "cancelled" | "unavailable";
   deadline: string; // return as ISO format 
 }
+
+export const taskSchema = z.object({
+  id: z.number().optional(),
+  name: z.string(),
+  description: z.string(),
+  assignerEmail: z.string(),
+  assigneeEmail: z.string(),
+  priority: z.enum(["low", "medium" , "high" , "urgent" , "critical"]),
+  status: z.enum(["todo" , "done" , "delay" , "cancelled" , "unavailable"]),
+  deadline: z.date(), // return as ISO format
+});
 
 export const TaskStatus = {
   todo: "todo",
@@ -47,7 +59,9 @@ export async function getAllTasks(): Promise<TaskResponseType>  {
 
 export async function createTask({ formData }: { formData: FormData }) {
 
-  const data = Object.fromEntries(formData);
+  const data = Object.fromEntries(formData); 
+  data['deadline'] = Date.parse(data['deadline'])
+  console.log({data})
 
   if (data == null) return;
   try {
@@ -93,7 +107,6 @@ export async function updateTask({ formData }: { formData: FormData }) {
 export async function deleteTask(taskId: string) {
   try {
     const resp = await del("/tasks/" + taskId);
-    console.log(resp);
     return resp;
   } catch (error) {
     if (error instanceof Error) throw new Error("Failed to delete");

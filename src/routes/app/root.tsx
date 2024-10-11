@@ -1,5 +1,5 @@
 import { getLocalToken } from "@/api/";
-import { UserType } from "@/api/user";
+import { Authority, UserType } from "@/api/user";
 import CommonBreadcrumbs from "@/components/layout/breadcrumbs";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 import ThemeToggle from "@/components/theme/theme-toggle";
@@ -8,7 +8,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { CircleUser, ClipboardList, FilePlus, Home, Inbox, LineChart, Menu, MessageCircleMore, Package2, PackageCheck, Search, SquareUser } from "lucide-react";
+import { CircleUser, ClipboardList, ContactRound, FilePlus, Home, Inbox, LineChart, Menu, MessageCircleMore, Package2, PackageCheck, Search, SquareUser } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate, useOutletContext } from "react-router-dom";
 import "./app.css";
@@ -31,7 +31,7 @@ export async function loader() {
  * Chat: /chat - instead chat application.
  * 
  */
-function RenderMenuContent({ isMobile }: { isMobile: boolean }) {
+function RenderMenuContent({ isMobile, authority }: { isMobile: boolean, authority: string | undefined }) {
   const twStyle = isMobile ? "h-5 w-5" : "h-6 w-6";
 
   const menu = [
@@ -41,11 +41,15 @@ function RenderMenuContent({ isMobile }: { isMobile: boolean }) {
     { href: "/app/analytics", text: "Analytic", icon: <LineChart className={twStyle} /> },
     { href: "/app/messages", text: "Messages", icon: <Inbox className={twStyle} /> },
     { href: "/app/chat", text: "Chat", icon: <MessageCircleMore className={twStyle} /> },
+    { href: "/app/authority", text: "User Authority Settings", icon: <ContactRound className={twStyle} /> },
   ]
 
-  return (
-    <>
-      {menu.map((item, index) => (
+  return (menu.map((item, index) => {
+    return (
+      authority?.toUpperCase() !== Authority.Admin && item.href.includes("authority")
+        ?
+        <></>
+        :
         <Link
           key={index}
           to={item.href}
@@ -54,8 +58,8 @@ function RenderMenuContent({ isMobile }: { isMobile: boolean }) {
           {item.icon}
           {item.text}
         </Link>
-      ))}
-    </>
+    )
+  })
   );
 }
 
@@ -95,19 +99,19 @@ export default function AppRoot() {
             </div>
             <div className="flex-1">
               <nav className="grid items-start px-2 text-sm font-medium lg:px-4">
-                <RenderMenuContent isMobile={false} />
+                <RenderMenuContent isMobile={false} authority={user?.authority} />
               </nav>
             </div>
             <div className="mt-auto p-4">
               <div className="flex">
-
+                {/* 
                 <Link
                   to="#"
                   className="flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary"
                 >
                   <SquareUser className="size-5" />
                   User Settings
-                </Link>
+                </Link> */}
                 <ThemeToggle />
               </div>
             </div>
@@ -141,7 +145,7 @@ export default function AppRoot() {
                     <Package2 className="h-6 w-6" />
                     <span className="sr-only">Mise en Place</span>
                   </Link>
-                  <RenderMenuContent isMobile={true} />
+                  <RenderMenuContent isMobile={true} authority={user?.authority} />
                 </nav>
                 <div className="mt-auto">
                   <Link
@@ -176,10 +180,8 @@ export default function AppRoot() {
               <DropdownMenuContent align="end">
                 <DropdownMenuLabel>Hi, {user!.firstName}!</DropdownMenuLabel>
                 <DropdownMenuSeparator />
-
-                  <DropdownMenuItem className="hover:cursor-pointer" onSelect={() => navigate("/app/settings")}>Settings</DropdownMenuItem>
-
-                <DropdownMenuItem>Support</DropdownMenuItem>
+                <DropdownMenuItem className="hover:cursor-pointer" onSelect={() => navigate("/app/settings")}>Settings</DropdownMenuItem>
+                {/* <DropdownMenuItem>Support</DropdownMenuItem> */}
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => logout()}>
                   Logout

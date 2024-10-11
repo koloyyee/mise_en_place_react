@@ -31,7 +31,7 @@ export function CommonCombobox({ value, setValue }: { value: string, setValue: R
       setFilteredValue([]);
     } else {
       setTimeout(async () => {
-        const resp = await getAllUsersByUsername( value ) as { data: UserType[] | null, ok: boolean };
+        const resp = await getAllUsersByUsername( value.toLowerCase() ) as { data: UserType[] | null, ok: boolean };
         if (resp.ok && resp.data) {
           setFilteredValue(resp.data);
         }
@@ -41,11 +41,13 @@ export function CommonCombobox({ value, setValue }: { value: string, setValue: R
 
   function showFullname(inputValue: string) {
     if (inputValue.trim() === "") return;
-    console.log(inputValue);
     const resultUser = filteredValues.find(user => user.firstName?.includes(inputValue) || user.lastName?.includes(inputValue) || user.username.includes(inputValue));
     return resultUser?.firstName + " " + resultUser?.lastName;
   }
   function firstNameInitial(user: UserType) {
+    if( user.firstName == null ) {
+      return user.username;
+    }
     return user.firstName + " " + user.lastName?.substring(0, 1) + "."
   }
 

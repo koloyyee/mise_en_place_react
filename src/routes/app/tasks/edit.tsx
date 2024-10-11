@@ -29,20 +29,20 @@ export async function action({ request }: { request: Request }) {
 
 export async function loader({ params }: { params: Params }) {
   const id = Number.parseInt(params.taskId ?? "");
-  const data = await getTaskById({ taskId: id });
-  console.log(data)
-  return { data }
+  const resp = await getTaskById({ taskId: id });
+  console.log(resp)
+  return { resp};
 }
 
 export default function EditTask() {
-  const { data } = useLoaderData() as { data: {task: TaskType, ok:boolean }};
+  const { resp } = useLoaderData() as { resp: {data: TaskType, ok:boolean }};
   const navigate = useNavigate();
 
-  console.log( {data});
+  console.log( resp);
   useEffect(() => {
-    if(!data.ok) {
+    if(!resp .ok) {
      navigate("/");
     }
   }, [navigate])
-  return <TaskFormBody isEdit={true} task={data.task} />
+  return <TaskFormBody isEdit={true} task={resp.data} />
 }

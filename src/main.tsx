@@ -6,11 +6,13 @@ import LoginPage, { action as loginAction } from './login.tsx'
 import ErrorPage from './routes/404.tsx'
 import Dashboard from './routes/app/dashboard.tsx'
 import AppRoot from './routes/app/root.tsx'
-import CreateTask, { action as createTaskAction } from './routes/tasks/create.tsx'
-import EditTask, { action as editTaskAction, loader as editTaskLoader } from './routes/tasks/edit.tsx'
-import Tasks, { loader as allTasksLoader } from './routes/tasks/index.tsx'
-import Task, { loader as taskLoader } from './routes/tasks/task.tsx'
-import Settings, { action as settingsAction, loader as settingsLoader } from './routes/users/settings.tsx'
+import CreateTask, { action as createTaskAction } from './routes/app/tasks/create.tsx'
+import EditTask, { action as editTaskAction, loader as editTaskLoader } from './routes/app/tasks/edit.tsx'
+import Tasks, { loader as allTasksLoader } from './routes/app/tasks/index.tsx'
+import Task, { action as taskAction, loader as taskLoader } from './routes/app/tasks/task.tsx'
+import Todo, { action as createTodoAction, loader as todosLoader } from './routes/app/todos/index.tsx'
+import Authority, { loader as authorityLoader } from './routes/app/user-profiles/index.tsx'
+import Settings, { action as settingsAction, loader as settingsLoader } from './routes/app/users/settings.tsx'
 
 
 const router = createBrowserRouter([
@@ -42,7 +44,8 @@ const router = createBrowserRouter([
         path: "tasks/:taskId",
         element: <Task />,
         errorElement: <ErrorPage />,
-        loader: taskLoader
+        loader: taskLoader,
+        action: taskAction,
       },
       {
         path: "tasks/create",
@@ -56,6 +59,21 @@ const router = createBrowserRouter([
         errorElement: <ErrorPage />,
         action: editTaskAction,
         loader: editTaskLoader,
+      },
+      // Todos
+      {
+        path: "todos",
+        element: <Todo/>,
+        errorElement: <ErrorPage/>,
+        action: createTodoAction,
+        loader: todosLoader
+      },
+      // Authority
+      {
+        path:"authority",
+        element: <Authority />,
+        errorElement: <ErrorPage />,
+        loader: authorityLoader,
       },
       // User Settings 
       {

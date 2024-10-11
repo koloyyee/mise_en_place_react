@@ -1,8 +1,17 @@
+import { UnauthorizedException } from "@/utils/exceptions/custom-exceptions";
 import { getLocalToken } from ".";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+const BACKEND_URL :string = import.meta.env.VITE_BACKEND_URL;
 
-export const HttpMethod = Object.freeze({
+export type HttpMethodType  = {
+  Post:string;
+  Get: string;
+  Put: string;
+  Delete: string;
+  Patch: string; 
+}
+
+export const HttpMethod : HttpMethodType = Object.freeze({
   Post: "POST",
   Get: "GET",
   Put: "PUT",
@@ -23,12 +32,8 @@ export async function get(endpoint: string): Promise<Response> {
       "Authorization": "Bearer " + getLocalToken()
     }
   })
-  if (resp.status === 401) {
-    // Handle 401 Unauthorized
-    console.error("Unauthorized access - redirecting to login.");
-    // Redirect to login page or perform other actions
-    window.location.href = "/";
-  }
+  
+  if (resp.status === 401) throw new UnauthorizedException();
   return resp;
 }
 
@@ -42,11 +47,11 @@ export async function post<T>(endpoint: string, data: T) {
     },
     body: JSON.stringify(data),
   })
+  if (resp.status === 401) throw new UnauthorizedException();
   return resp;
 }
 
 export async function put<T>(endpoint: string, data: T) {
-  console.log({data})
   const resp = await fetch(BACKEND_URL + endpoint, {
     method: Put,
     headers: {
@@ -55,6 +60,7 @@ export async function put<T>(endpoint: string, data: T) {
     },
     body: JSON.stringify(data),
   })
+  if (resp.status === 401) throw new UnauthorizedException();
   return resp;
 }
 
@@ -67,5 +73,6 @@ export async function del(endpoint: string) {
       "Authorization": "Bearer " + getLocalToken()
     }
   })
+  if (resp.status === 401) throw new UnauthorizedException();
   return resp;
 }
