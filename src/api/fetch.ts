@@ -1,30 +1,27 @@
 import { UnauthorizedException } from "@/utils/exceptions/custom-exceptions";
 import { getLocalToken } from ".";
-
 const BACKEND_URL :string = import.meta.env.VITE_BACKEND_URL;
 
-export type HttpMethodType  = {
-  Post:string;
-  Get: string;
-  Put: string;
-  Delete: string;
-  Patch: string; 
-}
-
-export const HttpMethod : HttpMethodType = Object.freeze({
-  Post: "POST",
-  Get: "GET",
-  Put: "PUT",
-  Delete: "DELETE",
-  Patch: "PATCH"
+export const HttpMethod = Object.freeze({
+  Post: "post" ,
+  Get: "get",
+  Put: "put",
+  Delete: "delete",
+  Patch: "patch"
 });
+
+
+
+
 const { Post, Get, Put, Delete } = HttpMethod;
 /**
+ * 
  * 
  * @param endpoint - make sure to have the / e.g.: "/tasks" or "/todo/2".
  * @returns Task
  */
 export async function get(endpoint: string): Promise<Response> {
+
   const resp = await fetch(BACKEND_URL + endpoint, {
     method: Get,
     headers: {

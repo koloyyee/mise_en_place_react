@@ -1,4 +1,4 @@
-import { HttpMethodType } from "@/api/fetch";
+import { FormMethod } from "react-router-dom";
 
 export class UnauthorizedException extends Error {
 
@@ -12,7 +12,7 @@ export class CRUDException extends Error {
   /**
    *  method is HttpMethod
    */
-  constructor(method: HttpMethodType) {
+  constructor(method: FormMethod) {
     super("Failed to " + method);
   }
 }

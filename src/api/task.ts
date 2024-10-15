@@ -25,13 +25,13 @@ export const taskSchema = z.object({
   deadline: z.date(), // return as ISO format
 });
 
-export const TaskStatus = {
+export const TaskStatus = Object.freeze({
   todo: "todo",
   done: "done",
   delay: "delay",
   cancelled: "cancelled",
   unavailable: "unavailable"
-} as const;
+});
 
 
 export const Priority = {
@@ -57,15 +57,11 @@ export async function getAllTasks(): Promise<TaskResponseType>  {
   return { data: await resp.json() as TaskType | null, ok: resp.ok }
 }
 
-export async function createTask({ formData }: { formData: FormData }) {
+export async function createTask({ formData }: { formData: TaskType}) {
 
-  const data = Object.fromEntries(formData); 
-  data['deadline'] = Date.parse(data['deadline'])
-  console.log({data})
-
-  if (data == null) return;
+  if (formData == null) return;
   try {
-    const resp = await post("/tasks", data)
+    const resp = await post("/tasks", formData)
     return await resp.json();
   } catch (error) {
     if (error instanceof Error) {
