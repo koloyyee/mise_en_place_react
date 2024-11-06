@@ -47,6 +47,7 @@ export type TaskResponseType = {
   ok: boolean
 }
 
+
 export async function getTaskById({ taskId }: { taskId: number }): Promise<TaskResponseType> {
   const resp = await get("/tasks/" + taskId);
   return { data: await resp.json() as TaskType | null, ok: resp.ok }
@@ -106,5 +107,17 @@ export async function deleteTask(taskId: string) {
     return resp;
   } catch (error) {
     if (error instanceof Error) throw new Error("Failed to delete");
+  }
+}
+
+/************************************************************* */
+
+export async function getAllBoards() {
+
+  try{
+    const resp = await get("/tasks/boards");
+    return resp;
+  } catch( error) {
+    if (error instanceof Error) throw new Error("Failed to fetch boards");
   }
 }
