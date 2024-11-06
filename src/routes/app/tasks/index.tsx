@@ -1,8 +1,8 @@
 import { getAllTasks, TaskResponseType, TaskType } from "@/api/task";
-import { DataTable } from "@/components/common/data-table";
-import { columns } from "@/components/tasks/column";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useEffect } from "react";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { Form, useLoaderData, useNavigate } from "react-router-dom";
 
 export async function loader() {
   const resp = await getAllTasks();
@@ -14,49 +14,35 @@ export async function loader() {
  */
 export default function Tasks() {
   const navigate = useNavigate();
-  const { resp } = useLoaderData() as {resp : TaskResponseType };
+  const { resp } = useLoaderData() as { resp: TaskResponseType };
   const tasks = resp.data as TaskType[];
   useEffect(() => {
     if (!resp.ok) {
       navigate("/");
-    } 
+    }
   }, [navigate])
-  
-  /***
-   * All the tasks are showing in table format
-   */
+
+
   // return (
-  //     <table>
-  //       <thead>
-  //         <tr className="text-center">
-  //           <th> #</th>
-  //           <th> Name</th>
-  //           <th> Assignee </th>
-  //           <th className="w-[3rem]">priority </th>
-  //         </tr>
-  //       </thead>
-  //       <tbody>
-  //         {tasks.map((task, key) => (
-  //           <tr className="text-center" key={key}>
-  //             <td>{task.id}</td>
-  //             <td>
-  //               <Link to={`/app/tasks/${task.id}`}>
-  //                 {task.name}
-  //               </Link>
-  //             </td>
-  //             <td>{task.assigneeEmail}</td>
-  //             <td className="w-1/2 flex text-center gap-2 justify-between">
-  //               <PriorityIcon priority={task.priority} />
-  //               {task.priority}
-  //             </td>
-  //           </tr>
-  //         ))}
-  //       </tbody>
-  //     </table>
-  // );
+  //   <div className="container mx-auto py-10">
+  //     <DataTable columns={columns} data={tasks} />
+  //   </div>
+  // )
+
+  // 2 parts:
+  // 1: create new board with a mini form with a colour picker and 
   return (
-    <div className="container mx-auto py-10">
-      <DataTable columns={columns} data={tasks} />
-    </div>
-  )
+    <main className="flex flex-col sm: w-max md:w-1/4 ">
+      <Form>
+        <label htmlFor="name">Create Board</label>
+        <Input  className="my-5" id="name" name="name" type="text" placeholder="Your New Board" />
+        <div className="flex gap-5 justify-between">
+          <Input className="w-1/4" type="color" id="colour" name="colour" />
+          <Button type="submit"> + </Button>
+        </div>
+      </Form>
+      {/* Boards goes here. */}
+    </main>
+
+  );
 }
