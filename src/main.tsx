@@ -31,32 +31,27 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <Dashboard />,
-        errorElement: <ErrorPage />,
       },
       // Tasks 
       {
         path: "tasks",
         element: <Tasks />,
-        errorElement: <ErrorPage />,
         loader: allTasksLoader
       },
       {
         path: "tasks/:taskId",
         element: <Task />,
-        errorElement: <ErrorPage />,
         loader: taskLoader,
         action: taskAction,
       },
       {
         path: "tasks/create",
         element: <CreateTask />,
-        errorElement: <ErrorPage />,
         action: createTaskAction,
       },
       {
         path: "tasks/edit/:taskId",
         element: <EditTask/>,
-        errorElement: <ErrorPage />,
         action: editTaskAction,
         loader: editTaskLoader,
       },
@@ -64,7 +59,6 @@ const router = createBrowserRouter([
       {
         path: "todos",
         element: <Todo/>,
-        errorElement: <ErrorPage/>,
         action: createTodoAction,
         loader: todosLoader
       },
@@ -72,14 +66,12 @@ const router = createBrowserRouter([
       {
         path:"authority",
         element: <Authority />,
-        errorElement: <ErrorPage />,
         loader: authorityLoader,
       },
       // User Settings 
       {
         path: "settings",
         element: <Settings/>,
-        errorElement: <ErrorPage />,
         loader: settingsLoader,
         action: settingsAction
       },
