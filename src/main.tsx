@@ -1,14 +1,15 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import { createBrowserRouter, Navigate, RouterProvider } from 'react-router-dom'
 import './index.css'
 import LoginPage, { action as loginAction } from './login.tsx'
 import ErrorPage from './routes/404.tsx'
 import Dashboard from './routes/app/dashboard.tsx'
 import AppRoot from './routes/app/root.tsx'
+import Board, { loader as boardLoader, } from './routes/app/tasks/board.tsx'
 import CreateTask, { action as createTaskAction } from './routes/app/tasks/create.tsx'
 import EditTask, { action as editTaskAction, loader as editTaskLoader } from './routes/app/tasks/edit.tsx'
-import Tasks, { loader as allTasksLoader } from './routes/app/tasks/index.tsx'
+import Tasks, { loader as allTasksLoader, action as tasksAction } from './routes/app/tasks/index.tsx'
 import Task, { action as taskAction, loader as taskLoader } from './routes/app/tasks/task.tsx'
 import Todo, { action as createTodoAction, loader as todosLoader } from './routes/app/todos/index.tsx'
 import Authority, { loader as authorityLoader } from './routes/app/user-profiles/index.tsx'
@@ -36,42 +37,69 @@ const router = createBrowserRouter([
       {
         path: "tasks",
         element: <Tasks />,
-        loader: allTasksLoader
+        loader: allTasksLoader,
+        action: tasksAction,
+        children: [
+          {
+            path: ":taskId",
+            element: <Task />,
+            loader: taskLoader,
+            action: taskAction,
+          },
+          {
+            path: "create",
+            element: <CreateTask />,
+            action: createTaskAction,
+          },
+          {
+            path: "edit/:taskId",
+            element: <EditTask />,
+            action: editTaskAction,
+            loader: editTaskLoader,
+          },
+          // {
+          //   path: "boards/",
+          //   element: <Navigate to="/app/tasks" />,
+          //   children : [
+          //     {
+          //       path: ":id",
+          //       element: <Board />,
+          //       loader: boardLoader
+
+          //     },
+          //   ]
+
+          // },
+
+        ]
       },
       {
-        path: "tasks/:taskId",
-        element: <Task />,
-        loader: taskLoader,
-        action: taskAction,
+        path: "tasks/boards",
+        element: <Navigate to="/app/tasks" />
       },
       {
-        path: "tasks/create",
-        element: <CreateTask />,
-        action: createTaskAction,
-      },
-      {
-        path: "tasks/edit/:taskId",
-        element: <EditTask/>,
-        action: editTaskAction,
-        loader: editTaskLoader,
+        path: "tasks/boards/:id",
+        element: <Board />,
+        loader: boardLoader
+
       },
       // Todos
       {
         path: "todos",
-        element: <Todo/>,
+        element: <Todo />,
         action: createTodoAction,
         loader: todosLoader
       },
       // Authority
       {
-        path:"authority",
+        path: "authority",
         element: <Authority />,
         loader: authorityLoader,
       },
       // User Settings 
       {
         path: "settings",
-        element: <Settings/>,
+        element: <Settings />,
         loader: settingsLoader,
         action: settingsAction
       },

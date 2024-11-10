@@ -2,7 +2,7 @@ import { HttpMethod } from "@/api/fetch";
 import { deleteTask, getTaskById, TaskType, updateTask } from "@/api/task";
 import TaskFormBody from "@/components/tasks/form-body";
 import { useEffect } from "react";
-import { Params, redirect, useLoaderData, useNavigate } from "react-router-dom";
+import { LoaderFunctionArgs, redirect, useLoaderData, useNavigate } from "react-router-dom";
 
 export async function action({ request }: { request: Request }) {
   const formData = await request.formData();
@@ -27,7 +27,7 @@ export async function action({ request }: { request: Request }) {
 
 }
 
-export async function loader({ params }: { params: Params }) {
+export async function loader({ params }: LoaderFunctionArgs) {
   const id = Number.parseInt(params.taskId ?? "");
   const resp = await getTaskById({ taskId: id });
   console.log(resp)

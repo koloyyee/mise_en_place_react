@@ -4,7 +4,7 @@ import { del, get, post, put } from "./fetch";
 
 
 export type TaskType = {
-  id: number;
+  id?: number;
   name: string;
   description: string;
   assignerEmail: string;
@@ -20,8 +20,8 @@ export const taskSchema = z.object({
   description: z.string(),
   assignerEmail: z.string(),
   assigneeEmail: z.string(),
-  priority: z.enum(["low", "medium" , "high" , "urgent" , "critical"]),
-  status: z.enum(["todo" , "done" , "delay" , "cancelled" , "unavailable"]),
+  priority: z.enum(["low", "medium", "high", "urgent", "critical"]),
+  status: z.enum(["todo", "done", "delay", "cancelled", "unavailable"]),
   deadline: z.date(), // return as ISO format
 });
 
@@ -48,17 +48,18 @@ export type TaskResponseType = {
 }
 
 
+
 export async function getTaskById({ taskId }: { taskId: number }): Promise<TaskResponseType> {
   const resp = await get("/tasks/" + taskId);
   return { data: await resp.json() as TaskType | null, ok: resp.ok }
 }
 
-export async function getAllTasks(): Promise<TaskResponseType>  {
-  const resp  = await get("/tasks");
+export async function getAllTasks(): Promise<TaskResponseType> {
+  const resp = await get("/tasks");
   return { data: await resp.json() as TaskType | null, ok: resp.ok }
 }
 
-export async function createTask({ formData }: { formData: TaskType}) {
+export async function createTask({ formData }: { formData: TaskType }) {
 
   if (formData == null) return;
   try {
@@ -112,12 +113,39 @@ export async function deleteTask(taskId: string) {
 
 /************************************************************* */
 
-export async function getAllBoards() {
+export type BoardType = {
+  id?: string;
+  name: string;
+  username?: string;
+  colour: string;
+  createdAt?: Date | null
+}
 
-  try{
+export const boardSchema = z.object({
+  id: z.string().optional(),
+  name: z.string(),
+  username: z.string().optional(),
+  colour: z.string(),
+  createdAt: z.date().nullable().optional(),
+});
+
+export async function getBoards() {
+
+  try {
     const resp = await get("/tasks/boards");
+    return await resp.json();
+  } catch (error) {
+    if (error instanceof Error) throw new Error("Failed to fetch boards");
+  }
+}
+
+export async function createBoard(formData: BoardType) {
+  try {
+    console.log({ formData})
+    const resp = await post("/tasks/boards", formData);
+    console.log(await resp.json());
     return resp;
-  } catch( error) {
+  } catch (error) {
     if (error instanceof Error) throw new Error("Failed to fetch boards");
   }
 }
