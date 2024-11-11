@@ -85,7 +85,9 @@ export default function Tasks() {
       <section className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-5 mt-[2rem]">
         {boards.map((board) => (
           <Link to={"/app/tasks/boards/" + board.id} key={board.id + "_link"}>
-            <Card key={board.id + "_card"} className={cn(`h-[5rem] border-b-[${board.colour}]  border-b-8 col-span-1`)}>
+            <Card key={board.id + "_card"} className={cn(`h-[5rem]  border-b-8 col-span-1`)}
+            style={{ borderBottomColor: board.colour}} 
+            >
               <CardTitle className={cn("m-3")}> {board.name} </CardTitle>
             </Card>
           </Link>
