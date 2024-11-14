@@ -1,5 +1,5 @@
-import { Priority, TaskStatus, TaskType } from "@/api/task";
 import { useUser } from "@/routes/app/root";
+import { Priority, TaskStatus, TaskType } from "@/types/task";
 import { DateTime } from "luxon";
 import { useState } from "react";
 import { Form } from "react-router-dom";

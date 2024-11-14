@@ -1,5 +1,6 @@
-import { createTask, taskSchema } from "@/api/task";
+import { createTask } from "@/api/task";
 import TaskFormBody from "@/components/tasks/form-body";
+import { taskSchema } from "@/types/task";
 import { redirect } from "react-router-dom";
 
 

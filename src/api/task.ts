@@ -1,52 +1,6 @@
+import { BoardType, TaskResponseType, TaskType } from "@/types/task";
 import { DateTime } from "luxon";
-import { z } from "zod";
 import { del, get, post, put } from "./fetch";
-
-
-export type TaskType = {
-  id?: number;
-  name: string;
-  description: string;
-  assignerEmail: string;
-  assigneeEmail: string;
-  priority: "low" | "medium" | "high" | "urgent" | "critical";
-  status: "todo" | "done" | "delay" | "cancelled" | "unavailable";
-  deadline: string; // return as ISO format 
-}
-
-export const taskSchema = z.object({
-  id: z.number().optional(),
-  name: z.string(),
-  description: z.string(),
-  assignerEmail: z.string(),
-  assigneeEmail: z.string(),
-  priority: z.enum(["low", "medium", "high", "urgent", "critical"]),
-  status: z.enum(["todo", "done", "delay", "cancelled", "unavailable"]),
-  deadline: z.date(), // return as ISO format
-});
-
-export const TaskStatus = Object.freeze({
-  todo: "todo",
-  done: "done",
-  delay: "delay",
-  cancelled: "cancelled",
-  unavailable: "unavailable"
-});
-
-
-export const Priority = {
-  low: "low",
-  medium: "medium",
-  high: "high",
-  urgent: "urgent",
-  critical: "critical",
-} as const;
-
-export type TaskResponseType = {
-  data: TaskType | TaskType[] | null,
-  ok: boolean
-}
-
 
 
 export async function getTaskById({ taskId }: { taskId: number }): Promise<TaskResponseType> {
@@ -113,21 +67,6 @@ export async function deleteTask(taskId: string) {
 
 /************************************************************* */
 
-export type BoardType = {
-  id?: string;
-  name: string;
-  username?: string;
-  colour: string;
-  createdAt?: Date | null
-}
-
-export const boardSchema = z.object({
-  id: z.string().optional(),
-  name: z.string(),
-  username: z.string().optional(),
-  colour: z.string(),
-  createdAt: z.date().nullable().optional(),
-});
 
 export async function getBoards() {
 
@@ -141,11 +80,33 @@ export async function getBoards() {
 
 export async function createBoard(formData: BoardType) {
   try {
-    console.log({ formData})
+    console.log({ formData })
     const resp = await post("/tasks/boards", formData);
     console.log(await resp.json());
     return resp;
   } catch (error) {
     if (error instanceof Error) throw new Error("Failed to fetch boards");
   }
+}
+
+/***************************************/
+
+export async function getColumns(boardId: string) {
+  if (!boardId || boardId.trim() === "") {
+    console.error("cannot be empty")
+    return
+  }
+
+  try {
+    console.log({ boardId })
+    const resp = await get("/tasks/boards/" + boardId);
+    if (resp.status !== 200) {
+      throw new Response("Failed to fetch columns", { status: resp.status })
+    }
+    const data = await resp.json();
+    return data;
+  } catch (error) {
+    if (error instanceof Error) throw new Error("Failed to fetch boards");
+  }
+
 }

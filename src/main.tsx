@@ -6,7 +6,7 @@ import LoginPage, { action as loginAction } from './login.tsx'
 import ErrorPage from './routes/404.tsx'
 import Dashboard from './routes/app/dashboard.tsx'
 import AppRoot from './routes/app/root.tsx'
-import Board, { loader as boardLoader, } from './routes/app/tasks/board.tsx'
+import Board, { action as boardAction, loader as boardLoader } from './routes/app/tasks/board.tsx'
 import CreateTask, { action as createTaskAction } from './routes/app/tasks/create.tsx'
 import EditTask, { action as editTaskAction, loader as editTaskLoader } from './routes/app/tasks/edit.tsx'
 import Tasks, { loader as allTasksLoader, action as tasksAction } from './routes/app/tasks/index.tsx'
@@ -80,7 +80,8 @@ const router = createBrowserRouter([
       {
         path: "tasks/boards/:id",
         element: <Board />,
-        loader: boardLoader
+        loader: boardLoader,
+        action: boardAction,
 
       },
       // Todos

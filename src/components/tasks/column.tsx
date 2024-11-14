@@ -1,5 +1,5 @@
-import { TaskType } from "@/api/task";
 
+import { TaskType } from "@/types/task";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { PriorityIcon } from "./priority-icons";
 
