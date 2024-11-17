@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 import { HttpMethod } from "@/api/fetch";
-import { deleteTask, getTaskById, TaskResponseType, TaskType, updateTask } from "@/api/task";
+import { deleteTask, getTaskById, TaskType, updateTask } from "@/api/task";
 import TaskFormBody from "@/components/tasks/form-body";
 import { useEffect } from "react";
 import { LoaderFunctionArgs, redirect, useLoaderData, useNavigate } from "react-router-dom";
@@ -33,8 +33,11 @@ export async function action({ request }: { request: Request }) {
 
 export async function loader({ params }: LoaderFunctionArgs) {
   const id = Number(params.taskId ?? '');
-  const resp = await getTaskById({ taskId: id }) as TaskResponseType;
-  return { resp };
+  const resp = await getTaskById({ taskId: id });
+  if(resp.status >= 300){
+    throw new Response("Failed to fetch task id: " + id, { status: resp.status, statusText: resp.statusText})
+  }
+  return { resp};
 }
 
 /**

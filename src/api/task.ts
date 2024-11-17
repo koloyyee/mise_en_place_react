@@ -1,29 +1,33 @@
-import { BoardType, TaskResponseType, TaskType } from "@/types/task";
+import { BoardType, ItemMutation, TaskType } from "@/types/task";
 import { DateTime } from "luxon";
 import { del, get, post, put } from "./fetch";
 
 
-export async function getTaskById({ taskId }: { taskId: number }): Promise<TaskResponseType> {
-  const resp = await get("/tasks/" + taskId);
-  return { data: await resp.json() as TaskType | null, ok: resp.ok }
+export async function getTaskById({ taskId }: { taskId: number }) {
+  return await get("/tasks/" + taskId);
 }
 
-export async function getAllTasks(): Promise<TaskResponseType> {
-  const resp = await get("/tasks");
-  return { data: await resp.json() as TaskType | null, ok: resp.ok }
+export async function getAllTasks(){
+  return await get("/tasks");
 }
 
 export async function createTask({ formData }: { formData: TaskType }) {
 
-  if (formData == null) return;
-  try {
-    const resp = await post("/tasks", formData)
-    return await resp.json();
-  } catch (error) {
-    if (error instanceof Error) {
-      throw new Error("unable to post new task.");
-    }
+  if (formData == null) {
+    console.error("form body missing");
+    return;
+  };
+  return await post("/tasks", formData)
+}
+
+// export async function updateTaskOrder(boardId: string, itemId: number, formData: FormData) {
+export async function updateTaskOrder(boardId: string, itemId: number, formData: ItemMutation) {
+  if(!formData) {
+    console.error("item is empty");
+    return;
   }
+  console.log(JSON.stringify(formData))
+  return await put("/tasks/boards/" + boardId + "/items/" + itemId + "/rearrange", formData);
 }
 
 export async function updateTask({ formData }: { formData: FormData }) {
@@ -55,7 +59,6 @@ export async function updateTask({ formData }: { formData: FormData }) {
 }
 
 
-
 export async function deleteTask(taskId: string) {
   try {
     const resp = await del("/tasks/" + taskId);
@@ -69,20 +72,22 @@ export async function deleteTask(taskId: string) {
 
 
 export async function getBoards() {
+  return await get("/tasks/boards");
+}
 
-  try {
-    const resp = await get("/tasks/boards");
-    return await resp.json();
-  } catch (error) {
-    if (error instanceof Error) throw new Error("Failed to fetch boards");
+export async function getBoard(boardId: string) {
+  if (!boardId || !boardId.trim()) {
+    console.error("cannot be null or empty")
+    return;
   }
+  return await get("/tasks/boards/" + boardId);
 }
 
 export async function createBoard(formData: BoardType) {
   try {
     console.log({ formData })
     const resp = await post("/tasks/boards", formData);
-    console.log(await resp.json());
+    console.log(resp);
     return resp;
   } catch (error) {
     if (error instanceof Error) throw new Error("Failed to fetch boards");
@@ -96,17 +101,6 @@ export async function getColumns(boardId: string) {
     console.error("cannot be empty")
     return
   }
-
-  try {
-    console.log({ boardId })
-    const resp = await get("/tasks/boards/" + boardId);
-    if (resp.status !== 200) {
-      throw new Response("Failed to fetch columns", { status: resp.status })
-    }
-    const data = await resp.json();
-    return data;
-  } catch (error) {
-    if (error instanceof Error) throw new Error("Failed to fetch boards");
-  }
-
+  console.log({ boardId })
+  return await get("/tasks/boards/" + boardId);
 }

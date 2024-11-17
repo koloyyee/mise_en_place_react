@@ -6,10 +6,10 @@ export type TaskType = {
   description: string;
   assignerEmail: string;
   assigneeEmail: string;
-  order: number;
-  columnId: string;
+  orderNum: number;
+  boardId: string;
+  columnId: number;
   priority: "low" | "medium" | "high" | "urgent" | "critical";
-  status: "todo" | "done" | "delay" | "cancelled" | "unavailable";
   deadline: string; // return as ISO format 
 }
 
@@ -19,12 +19,12 @@ export const taskSchema = z.object({
   description: z.string(),
   assignerEmail: z.string(),
   assigneeEmail: z.string(),
-  order: z.number(),
-  columnId: z.string(),
+  orderNum: z.number(),
+  columnId: z.number(),
   priority: z.enum(["low", "medium", "high", "urgent", "critical"]),
-  status: z.enum(["todo", "done", "delay", "cancelled", "unavailable"]),
   deadline: z.string(), // return as ISO format
 });
+
 
 export const TaskStatus = Object.freeze({
   todo: "todo",
@@ -76,7 +76,16 @@ export type BoardType = {
   name: string;
   username?: string;
   colour: string;
-  createdAt?: Date | null
+  cols?: ColType[];
+  createdAt?: Date | null;
+  updatedAt?: Date | null;
+}
+
+export type ColType = {
+  id? : number;
+  orderNum?: number;
+  items?: TaskType[];
+  name: string;
 }
 
 export const boardSchema = z.object({
@@ -96,7 +105,7 @@ export const ItemMutationFields = {
 
 export type ItemMutation = {
   id: string;
-  columnId: string;
-  order: number;
+  columnId: number;
+  orderNum: number;
   name: string;
 };

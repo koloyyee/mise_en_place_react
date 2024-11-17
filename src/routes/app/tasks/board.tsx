@@ -1,21 +1,63 @@
+import { getBoard, updateTaskOrder } from "@/api/task";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Intent } from "@/types/task";
+import { BoardType, Intent, ItemMutation } from "@/types/task";
 import { useState } from "react";
-import { ActionFunctionArgs, Form, LoaderFunctionArgs, useSubmit } from "react-router-dom";
+import { ActionFunctionArgs, Form, LoaderFunctionArgs, useLoaderData, useSubmit } from "react-router-dom";
+import { ZodError } from "zod";
+import Column from "./column";
 
-export async function action({request} : ActionFunctionArgs) {
+function parseRearrangeItem(item: ItemMutation) {
+	if (!item.id) {
+		console.error("id missing")
+	}
+	if (!item.orderNum) {
+		console.error("orderNum missing")
+	}
+	if (!item.name) {
+		console.error("name missing")
+	}
+	if (!item.columnId) {
+		console.error("columnId missing")
+	}
+	return { id: item.id, name: item.name, columnId: item.columnId, orderNum: item.columnId }
+}
+
+export async function action({ request }: ActionFunctionArgs) {
 	const formData = await request.formData();
+	const intent = formData.get("intent");
+	const itemId = Number(formData.get("id"));
+	const boardId = String(formData.get("boardId"));
+	
+	formData.delete("intent");
+	const item = Object.fromEntries(formData) as unknown as ItemMutation;
+	console.log(Object.fromEntries(formData))
+	console.log(item)
 
-		console.log(Object.fromEntries(formData))
+	try {
+		switch (intent) {
+			case Intent.moveItem:
+				await updateTaskOrder(boardId, itemId, item);
+				break;
+			case Intent.createColumn:
+				console.log("create column");
+				break;
+
+			default:
+				break;
+		}
+	} catch (e) {
+		if (e instanceof ZodError) console.error(e.formErrors);
+	}
 	return {};
 }
 
 export async function loader({ params }: LoaderFunctionArgs) {
-	const boardId = String(params.boardId);
-	const columns = await getColumns(boardId);
-	console.log(columns);
-	return { columns }
+	const board = await getBoard(String(params.id));
+	if (!board || board.status >= 300) {
+		throw new Response("Unable to fetch board ", { status: board?.status });
+	}
+	return { board: await board.json() }
 }
 
 export default function Board() {
@@ -31,6 +73,9 @@ export default function Board() {
 	 * each column can be arrange with drag and drop,
 	 * each column will have a list of card(item), we can create card with an add new item button
 	 */
+	const { board } = useLoaderData() as { board: BoardType };
+	console.log({board})
+
 	const submit = useSubmit();
 	const [addColumn, setAddColumn] = useState(false);
 
@@ -39,16 +84,26 @@ export default function Board() {
 			{/* create column, the button will turn from a button to input form  */}
 			{addColumn ?
 				// creating new column with form
-				<Form method="POST">
+				<Form method="POST" onSubmit={(e) => {
+					e.preventDefault();
+				}}>
 					<Input type="text" name="name" id="columnName" />
 					<input type="hidden" name="intent" value={Intent.createColumn} />
-					<Button type = "submit" id="createColumn" />
-					<Button variant={"outline"}  onClick={() => setAddColumn(false)}> cancel </Button>
+					<Button aria-label="submit-button" role="submit" type="submit" id="createColumn" />
+					<Button aria-label="cancel-button" role="cancel" variant={"outline"} onClick={() => setAddColumn(false)}> cancel </Button>
 				</Form>
 				:
-
 				<Button type="button" onClick={() => setAddColumn(true)}>  + </Button>
 			}
+			{/* rerender columns here */}
+			<div className="flex gap-5 flex-grow">
+				{board?.cols?.map((col, index) => {
+					if (col.id && board.id) {
+						return <Column key={"col-" + col.id + "-" + index} aria-label="board-column" boardId={board.id} name={col.name} items={col.items ?? []} columnId={col.id}>
+						</Column>
+					}
+				})}
+			</div>
 		</main>
 	);
 }

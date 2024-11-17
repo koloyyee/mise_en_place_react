@@ -30,7 +30,9 @@ export async function action({ request }: { request: Request }) {
 export async function loader({ params }: LoaderFunctionArgs) {
   const id = Number.parseInt(params.taskId ?? "");
   const resp = await getTaskById({ taskId: id });
-  console.log(resp)
+  if(resp.status >= 300){
+    throw new Response("Failed to fetch task id: " + id, { status: resp.status, statusText: resp.statusText})
+  }
   return { resp};
 }
 

@@ -1,18 +1,18 @@
-import { boardSchema, BoardType, createBoard, getBoards } from "@/api/task";
+import { createBoard, getBoards } from "@/api/task";
 import { Button } from "@/components/ui/button";
 import { Card, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import { boardSchema, BoardType } from "@/types/task";
 import { ActionFunctionArgs, Form, Link, useLoaderData, useNavigate, useSubmit } from "react-router-dom";
 import { z } from "zod";
 
 export async function loader() {
   const boards = await getBoards();
-
-  if (boards.stauts >= 300) {
+  if (boards.status >= 300) {
     throw new Response("Bad Request", { status: boards.status });
   }
-  return { boards };
+  return { boards: await boards.json() };
 }
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -44,26 +44,9 @@ export default function Tasks() {
   const navigate = useNavigate();
   const submit = useSubmit();
   const { boards } = useLoaderData() as { boards: BoardType[] };
-  // const tasks = resp.data as TaskType[];
-  // useEffect(() => {
-  //   if (!boards.ok) {
-  //     navigate("/");
-  //   }
-  // }, [navigate])
-
-
-  // return (
-  //   <div className="container mx-auto py-10">
-  //     <DataTable columns={columns} data={tasks} />
-  //   </div>
-  // )
-
-  // 2 parts:
-  // 1: create new board with a mini form with a colour picker and 
 
   return (
     <main>
-
       <div className="flex flex-col sm: w-max md:w-1/4 ">
         {/* when submit > save in db > re-render the boards below */}
         <Form onSubmit={(e) => {
@@ -84,7 +67,7 @@ export default function Tasks() {
       {/* Boards goes here. fix values for now */}
       <section className="grid sm:grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-5 mt-[2rem]">
         {boards.map((board) => (
-          <Link to={"/app/tasks/boards/" + board.id} key={board.id + "_link"}>
+          <Link to={"/app/tasks/boards/" + board.id} key={board.id} id={"link-" + board.id}>
             <Card key={board.id + "_card"} className={cn(`h-[5rem]  border-b-8 col-span-1`)}
             style={{ borderBottomColor: board.colour}} 
             >
