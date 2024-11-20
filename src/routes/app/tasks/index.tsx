@@ -23,9 +23,14 @@ export async function action({ request }: ActionFunctionArgs) {
     const validatedData = boardSchema.parse(newBoard);
 
     switch (method) {
-      case "POST":
-        await createBoard(validatedData);
-        break;
+      case "POST": {
+        const resp = await createBoard(validatedData);
+
+        if(resp === null || resp!.status !== null || resp!.status >= 300) {
+          throw new Response("Failed to create board", { status: resp?.status});
+        }
+        return await resp?.json()
+      }
       default:
         break;
     }

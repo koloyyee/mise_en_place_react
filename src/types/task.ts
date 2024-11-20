@@ -86,6 +86,7 @@ export type ColType = {
   orderNum?: number;
   items?: TaskType[];
   name: string;
+  boardId: string;
 }
 
 export const boardSchema = z.object({
