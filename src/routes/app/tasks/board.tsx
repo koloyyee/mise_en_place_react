@@ -113,6 +113,7 @@ export default function Board() {
 						</Column>
 					}
 				})}
+
 			</div>
 		</main>
 	);

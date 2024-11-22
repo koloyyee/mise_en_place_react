@@ -1,6 +1,8 @@
-import { ItemMutation, TaskType } from "@/api/task";
+import TaskFormBody from "@/components/tasks/form-body";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
-import { ContentTypes, Intent } from "@/types/task";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { ColMutation, ContentTypes, Intent, TaskType } from "@/types/task";
 import { useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { ActionFunctionArgs, useFetcher, useSubmit } from "react-router-dom";
@@ -50,13 +52,12 @@ export default function Column({ boardId, columnId, items, name }: Column) {
 			onDrop={(e) => {
 				const transfer = JSON.parse(e.dataTransfer.getData(ContentTypes.card));
 				if (!transfer.id || !transfer.name) console.error("id or name missing")
-				const mutatedItem: ItemMutation = {
+				const mutatedItem: ColMutation = {
 					order: 1,
 					columnId: columnId,
 					id: transfer.id,
 					name: transfer.name
 				}
-				console.log({ mutatedItem })
 				submit({ ...mutatedItem, boardId: boardId, intent: Intent.moveItem },
 					{
 						method: "POST",
@@ -88,18 +89,38 @@ export default function Column({ boardId, columnId, items, name }: Column) {
 							<Item
 								item={item}
 								key={"item-" + item.id}
-								prevOrder={item[index - 1] ? item[index - 1].orderNum : 0}
-								nextOrder={item[index + 1] ? item[index + 1].orderNum : item.orderNum + 1}
+								prevOrder={items[index - 1] ? items[index - 1].orderNum : 0}
+								nextOrder={items[index + 1] ? items[index + 1].orderNum : item.orderNum + 1}
 							/>
 						))}
 
+
+					<Dialog>
+						<DialogTrigger asChild>
+							<Button variant="outline">+</Button>
+						</DialogTrigger>
+						<DialogContent className="sm:max-w-[69rem]">
+							<DialogHeader>
+								<DialogTitle>Create New Task</DialogTitle>
+								<DialogDescription>
+									Here you can create and assign new task.
+								</DialogDescription>
+								<div className="grid gap-4 py-4">
+									<TaskFormBody isEdit={false} />
+								</div>
+								{/* <DialogFooter>
+									<Button type="submit">Save changes</Button>
+								</DialogFooter> */}
+							</DialogHeader>
+						</DialogContent>
+					</Dialog>
 				</ul>
 			</CardContent>
 		</Card>
 	);
 }
 
-function EditableText({
+export function EditableText({
 	children,
 	fieldName,
 	value,

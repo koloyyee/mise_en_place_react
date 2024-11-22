@@ -88,6 +88,12 @@ export type ColType = {
   name: string;
   boardId: string;
 }
+export interface ColMutation {
+	order: number,
+	columnId: number;
+	id: string;
+	name: string,
+}
 
 export const boardSchema = z.object({
   id: z.string().optional(),
