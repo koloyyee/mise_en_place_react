@@ -21,6 +21,7 @@ export const taskSchema = z.object({
   assigneeEmail: z.string(),
   orderNum: z.number(),
   columnId: z.number(),
+  boardId: z.string(),
   priority: z.enum(["low", "medium", "high", "urgent", "critical"]),
   deadline: z.string(), // return as ISO format
 });

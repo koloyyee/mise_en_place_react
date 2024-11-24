@@ -55,7 +55,7 @@ export default function Item({
           name: transfer.name,
         }
 
-
+				console.log(mutation)
         submit({ ...mutation, boardId: item.boardId, intent: Intent.moveItem }, {
           method: "PUT",
           navigate: false,

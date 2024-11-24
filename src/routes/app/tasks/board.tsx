@@ -1,4 +1,4 @@
-import { createColumn, getBoard, updateTaskOrder } from "@/api/task";
+import { createColumn, createTask, getBoard, updateTaskOrder } from "@/api/task";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { BoardType, Intent, ItemMutation } from "@/types/task";
@@ -33,18 +33,29 @@ export async function action({ request }: ActionFunctionArgs) {
 			case Intent.moveItem: {
 				const resp = await updateTaskOrder(formData);
 				if (resp === null || resp!.status >= 300) {
-					throw new Response("Failed to move item", { status: resp!.status })
+					throw new Response("Failed to move item", { status: resp!.status , statusText : resp!.statusText})
 				}
 				return await resp?.json();
 			}
-			case Intent.createItem:
-				console.log("create item");
+			case Intent.createItem: {
+				try {
+					formData.delete("id");
+					// const validData = taskSchema.parse(Object.fromEntries(formData));
+					const resp = await createTask(formData);
+					if(resp === null || resp!.status >= 300 ) {
+						throw new Response("Unable to create new item", {status : resp?.status})
+					}
+					return await resp?.json();
+				} catch (e) {
+					console.error(e);
+				}
 				break;
+			}
 
 			case Intent.createColumn: {
 				const resp = await createColumn(formData);
 				if (resp === null || resp!.status >= 300) {
-					throw new Response("Failed to create column", { status: resp!.status, statusText: resp?.statusText})
+					throw new Response("Failed to create column", { status: resp!.status, statusText: resp?.statusText })
 				}
 				return await resp?.json();
 			}
@@ -80,7 +91,7 @@ export default function Board() {
 	 */
 	const { board } = useLoaderData() as { board: BoardType };
 	const [addColumn, setAddColumn] = useState(false);
-	
+
 	const submit = useSubmit();
 
 	return (
@@ -97,7 +108,7 @@ export default function Board() {
 				}}>
 					<Input type="text" name="name" id="columnName" />
 					<input type="hidden" name="intent" value={Intent.createColumn} />
-					<input type="hidden" name="orderNum" value={board.cols?.length ? board.cols?.length + 1 : 0 } />
+					<input type="hidden" name="orderNum" value={board.cols?.length ? board.cols?.length + 1 : 0} />
 					<input type="hidden" name="boardId" value={board.id} />
 					<Button aria-label="submit-button" role="submit" type="submit" id="createColumn" />
 					<Button aria-label="cancel-button" role="cancel" variant={"outline"} onClick={() => setAddColumn(false)}> cancel </Button>

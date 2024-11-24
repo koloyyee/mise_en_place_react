@@ -1,4 +1,3 @@
-import TaskFormBody from "@/components/tasks/form-body";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -7,6 +6,7 @@ import { useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { ActionFunctionArgs, useFetcher, useSubmit } from "react-router-dom";
 import Item from "./item";
+import TaskFormBody from "./new-item-form-body";
 
 /**
  * Column is the component represent different status or stage in a board, e.g.: To-Do, Done  
@@ -29,10 +29,14 @@ export default function Column({ boardId, columnId, items, name }: Column) {
 
 	const [acceptDrop, setAcceptDrop] = useState(false);
 	const [edit, setEdit] = useState(false);
-	const listRef = useRef<HTMLUListElement>();
+	const listRef = useRef<HTMLUListElement>(null);
 
 	const submit = useSubmit();
 
+	function scrollList() {
+    // invariant(listRef.current);
+    listRef.current.scrollTop = listRef.current.scrollHeight;
+  }
 
 	return (
 		<Card
@@ -51,6 +55,7 @@ export default function Column({ boardId, columnId, items, name }: Column) {
 			}}
 			onDrop={(e) => {
 				const transfer = JSON.parse(e.dataTransfer.getData(ContentTypes.card));
+				console.log({transfer})
 				if (!transfer.id || !transfer.name) console.error("id or name missing")
 				const mutatedItem: ColMutation = {
 					order: 1,
@@ -93,27 +98,27 @@ export default function Column({ boardId, columnId, items, name }: Column) {
 								nextOrder={items[index + 1] ? items[index + 1].orderNum : item.orderNum + 1}
 							/>
 						))}
-
-
-					<Dialog>
-						<DialogTrigger asChild>
-							<Button variant="outline">+</Button>
-						</DialogTrigger>
-						<DialogContent className="sm:max-w-[69rem]">
-							<DialogHeader>
-								<DialogTitle>Create New Task</DialogTitle>
-								<DialogDescription>
-									Here you can create and assign new task.
-								</DialogDescription>
-								<div className="grid gap-4 py-4">
-									<TaskFormBody isEdit={false} />
-								</div>
-								{/* <DialogFooter>
-									<Button type="submit">Save changes</Button>
-								</DialogFooter> */}
-							</DialogHeader>
-						</DialogContent>
-					</Dialog>
+						<Dialog>
+							<DialogTrigger asChild>
+								<Button variant="outline">+</Button>
+							</DialogTrigger>
+							<DialogContent className="sm:max-w-[69rem]">
+								<DialogHeader>
+									<DialogTitle>Create New Task</DialogTitle>
+									<DialogDescription>
+										Here you can create and assign new task.
+									</DialogDescription>
+									<div className="grid gap-4 py-4">
+										<TaskFormBody isEdit={false}
+											columnId={columnId}
+											boardId={boardId}
+											nextOrder={items.length === 0 ? 1 : items[items.length - 1].orderNum + 1}
+											onAddCard={() => scrollList()}
+											onComplete={() => setEdit(false)} />
+									</div>
+								</DialogHeader>
+							</DialogContent>
+						</Dialog>
 				</ul>
 			</CardContent>
 		</Card>
