@@ -8,7 +8,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel,
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetDescription, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { VisuallyHidden } from "@radix-ui/react-visually-hidden";
-import { CircleUser, ClipboardList, ContactRound, FilePlus, Home, Inbox, LineChart, Menu, MessageCircleMore, Package2, PackageCheck, Search, SquareUser } from "lucide-react";
+import { CircleUser, ContactRound, FilePlus, Home, Menu, MessageCircleMore, Package2, PackageCheck, Search, SquareUser } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate, useOutletContext } from "react-router-dom";
 import "./app.css";
@@ -37,9 +37,9 @@ function RenderMenuContent({ isMobile, authority }: { isMobile: boolean, authori
   const menu = [
     { href: "/app", text: "Dashboard", icon: <Home className={twStyle} /> },
     { href: "/app/tasks", text: "Task", icon: <PackageCheck className={twStyle} /> },
-    { href: "/app/todos", text: "ToDos", icon: <ClipboardList className={twStyle} /> },
-    { href: "/app/analytics", text: "Analytic", icon: <LineChart className={twStyle} /> },
-    { href: "/app/messages", text: "Messages", icon: <Inbox className={twStyle} /> },
+    // { href: "/app/todos", text: "ToDos", icon: <ClipboardList className={twStyle} /> },
+    // { href: "/app/analytics", text: "Analytic", icon: <LineChart className={twStyle} /> },
+    // { href: "/app/messages", text: "Messages", icon: <Inbox className={twStyle} /> },
     { href: "/app/chat", text: "Chat", icon: <MessageCircleMore className={twStyle} /> },
     { href: "/app/authority", text: "User Authority Settings", icon: <ContactRound className={twStyle} /> },
   ]

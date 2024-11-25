@@ -6,7 +6,7 @@ import { useRef, useState } from "react";
 import { flushSync } from "react-dom";
 import { ActionFunctionArgs, useFetcher, useSubmit } from "react-router-dom";
 import Item from "./item";
-import TaskFormBody from "./new-item-form-body";
+import TaskFormBody from "./item-form-body";
 
 /**
  * Column is the component represent different status or stage in a board, e.g.: To-Do, Done  
@@ -114,7 +114,9 @@ export default function Column({ boardId, columnId, items, name }: Column) {
 											boardId={boardId}
 											nextOrder={items.length === 0 ? 1 : items[items.length - 1].orderNum + 1}
 											onAddCard={() => scrollList()}
-											onComplete={() => setEdit(false)} />
+											onComplete={() => setEdit(false)} 
+											intent= {Intent.createItem}
+											/>
 									</div>
 								</DialogHeader>
 							</DialogContent>

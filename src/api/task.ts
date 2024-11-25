@@ -1,5 +1,5 @@
 import { BoardType, ColType, ItemMutation } from "@/types/task";
-import { DateTime } from "luxon";
+import { parseDate } from "@/utils/helper";
 import { del, get, post, put } from "./fetch";
 
 
@@ -13,21 +13,10 @@ export async function getAllTasks() {
 
 export async function createTask(formData: FormData) {
 	
-	const deadline = formData.get("deadline");
-  let deadlineFormatted = null;
-
-  if (typeof deadline === "string") {
-    const dateTime = DateTime.fromFormat(deadline, "dd/MM/yyyy, HH:mm:ss", { zone: "UTC" });
-    if (dateTime.isValid) {
-      deadlineFormatted = dateTime.toFormat("yyyy-MM-dd'T'HH:mm:ss");
-    } else {
-      console.error("Invalid DateTime object:", dateTime.invalidExplanation);
-    }
-  }
+	const deadline = String(formData.get("deadline"));
 
 	const item = Object.fromEntries(formData);
-	let data = {...item, orderNum: Number(item.orderNum), columnId: Number(item.columnId) , deadline : deadlineFormatted}
-	console.log(data)
+	const data = {...item, orderNum: Number(item.orderNum), columnId: Number(item.columnId) , deadline : parseDate(deadline)}
 	if (formData == null) {
 		console.error("form body missing");
 		return;
@@ -47,30 +36,30 @@ export async function updateTaskOrder(formData: FormData) {
 	return await put("/tasks/boards/" + boardId + "/items/" + id + "/rearrange", item);
 }
 
-export async function updateTask({ formData }: { formData: FormData }) {
+export async function updateTask( formData: FormData ) {
 
 	const id = formData.get("id");
-
-	const date = formData.get("deadline") as string;
-	const parsedDate = DateTime.fromFormat(date, "dd/MM/yyyy, HH:mm:ss");
-	const formattedDate = parsedDate.toFormat("yyyy-MM-dd'T'HH:mm:ss");
-	formData.set("deadline", formattedDate);
-
+	const date = formData.get("deadline") as string;	
+	formData.set("deadline", parseDate(date));
 	const data = Object.fromEntries(formData);
-
 	if (data === null || id === null) return;
 
-	return await put(`/tasks/${id}`, data);
+	console.log(data)
+	return await put(`/tasks/boards/items/${id}`, data);
 	// throw new Response(error.message, { status: resp.status });
 }
 
 
-export async function deleteTask(taskId: string) {
+export async function deleteTask(boardId: string, taskId: string) {
+	if (!boardId|| boardId.trim() === "") {
+		console.error("Task Id cannot be empty")
+		return;
+	}
 	if (!taskId || taskId.trim() === "") {
 		console.error("Task Id cannot be empty")
 		return;
 	}
-	return await del("/tasks/" + taskId);
+	return await del(`/tasks/boards/items/${taskId}`);
 }
 
 /************************************************************* */

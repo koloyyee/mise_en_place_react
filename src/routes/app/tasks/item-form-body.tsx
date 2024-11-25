@@ -19,9 +19,10 @@ interface TaskFormBodyProps {
 	nextOrder: number,
 	onAddCard: () => void;
 	onComplete: () => void;
+	intent: string
 }
 
-export default function TaskFormBody({ boardId, columnId, nextOrder, onAddCard, onComplete, isEdit = false, task }: TaskFormBodyProps) {
+export default function TaskFormBody({ boardId, columnId, nextOrder = 0, onAddCard, onComplete, isEdit = false, task, intent }: TaskFormBodyProps) {
 
   const { user } = useUser();
   const [allowInput, setAllowInput] = useState<boolean>(!isEdit);
@@ -38,7 +39,7 @@ export default function TaskFormBody({ boardId, columnId, nextOrder, onAddCard, 
 				<input type="hidden" name="columnId" value={columnId} />
 				<input type="hidden" name="boardId" value={boardId} />
 				<input type="hidden" name="orderNum" value={nextOrder} />
-				<input type="hidden" name="intent" value={Intent.createItem} />
+				<input type="hidden" name="intent" value={intent} />
         <Input type="hidden" name="id" value={isEdit ? task?.id : undefined} disabled={!allowInput} />
 
         <div className="left grid-col-3  md:col-start-2 md:col-span-5 lg:col-start-3 lg:col-span-4">
@@ -65,23 +66,6 @@ export default function TaskFormBody({ boardId, columnId, nextOrder, onAddCard, 
               </SelectContent>
             </Select>
           </div>
-          {/* {isEdit ?
-            <div className="my-4">
-              <Label htmlFor="status">Status</Label>
-              <Select name="status" defaultValue={task?.status} disabled={!allowInput} >
-                <SelectTrigger >
-                  <SelectValue placeholder="Select status" />
-                </SelectTrigger>
-                <SelectContent>
-                  {Object.entries(TaskStatus).map(([k, v]) => {
-                    return <SelectItem key={k} value={v}>{k}</SelectItem>;
-                  })}
-                </SelectContent>
-              </Select>
-            </div>
-            :
-            <></>
-          } */}
           <div className="mt-4 mb-2 flex flex-col gap-1 ">
             <Label htmlFor="assigner">Assigner</Label>
             <Input type="hidden" id="assigner" name="assignerEmail" value={assigner ?? ""} disabled={!allowInput} />
@@ -157,6 +141,8 @@ export default function TaskFormBody({ boardId, columnId, nextOrder, onAddCard, 
       {isEdit ?
         <Form method="DELETE">
           <input type="hidden" name="id" value={task?.id ?? ""} />
+          <input type="hidden" name="boardId" value={task?.boardId?? ""} />
+          <input type="hidden" name="intent" value={Intent.deleteItem} />
           <Button type="submit" className="mt-4 place-content-center" disabled={!allowInput}> delete </Button>
         </Form>
         :

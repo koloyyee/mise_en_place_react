@@ -55,15 +55,18 @@ export type TaskResponseType = {
  * Intent is a constant enum show the intent of each field as a type for different actions.
  */
 export const Intent = {
-  createColumn: "newColumn" as const,
-  updateColumn: "updateColumn" as const,
-  createItem: "createItem" as const,
-  moveItem: "moveItem" as const,
-  moveColumn: "moveColumn" as const,
   updateBoardName: "updateBoardName" as const,
   deleteBoard: "deleteBoard" as const,
   createBoard: "createBoard" as const,
-  deleteCard: "deleteCard" as const,
+
+  createColumn: "newColumn" as const,
+  updateColumn: "updateColumn" as const,
+  moveColumn: "moveColumn" as const,
+
+  createItem: "createItem" as const,
+  moveItem: "moveItem" as const,
+  updateItem: "updateItem" as const,
+  deleteItem: "deleteItem" as const,
 }
 
 

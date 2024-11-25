@@ -1,8 +1,15 @@
+import { Button } from "@/components/ui/button";
 import { Card, CardTitle } from "@/components/ui/card";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ContentTypes, Intent, ItemMutation, TaskType } from "@/types/task";
 import { useState } from "react";
 import { useSubmit } from "react-router-dom";
+import TaskFormBody from "./item-form-body";
 
+/**
+ * The idea of "moving" is not about actually shifting but rather sending a request
+ * and mutate the database record and update the frontend.
+ */ 
 
 interface ItemProp {
   item: TaskType;
@@ -17,9 +24,11 @@ export default function Item({
 
 }: ItemProp) {
 
-  const { id, orderNum, columnId, name } = item;
+  const { id, orderNum, columnId, name, boardId} = item;
   const submit = useSubmit();
   const [acceptDrop, setAcceptDrop] = useState<"none" | "top" | "bottom">("none");
+	const [edit, setEdit] = useState(false);
+
   return (
     <li
       className={
@@ -55,7 +64,6 @@ export default function Item({
           name: transfer.name,
         }
 
-				console.log(mutation)
         submit({ ...mutation, boardId: item.boardId, intent: Intent.moveItem }, {
           method: "PUT",
           navigate: false,
@@ -69,12 +77,35 @@ export default function Item({
         className="p-3 my-2"
         onDragStart={(e) => {
           e.dataTransfer.effectAllowed = "move";
-          console.log("moving " + id + name)
           e.dataTransfer.setData(ContentTypes.card, JSON.stringify({ id, name }))
         }}
       >
-        <CardTitle>
+        <CardTitle className="flex justify-between">
           {name}
+				<Dialog>
+							<DialogTrigger asChild>
+								<Button variant="outline">✍️</Button>
+							</DialogTrigger>
+							<DialogContent className="sm:max-w-[69rem]">
+								<DialogHeader>
+									<DialogTitle>Create New Task</DialogTitle>
+									<DialogDescription>
+										Here you can create and assign new task.
+									</DialogDescription>
+									<div className="grid gap-4 py-4">
+										<TaskFormBody isEdit={true}
+											columnId={columnId}
+											boardId={boardId}
+											nextOrder={item.orderNum}
+											onAddCard={() => {}}
+											onComplete={() => setEdit(false)} 
+											intent={Intent.updateItem}
+											task = { item}
+											/>
+									</div>
+								</DialogHeader>
+							</DialogContent>
+						</Dialog>
         </CardTitle>
       </Card>
     </li>

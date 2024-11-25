@@ -1,4 +1,4 @@
-import { createColumn, createTask, getBoard, updateTaskOrder } from "@/api/task";
+import { createColumn, createTask, deleteTask, getBoard, updateTask, updateTaskOrder } from "@/api/task";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { BoardType, Intent, ItemMutation } from "@/types/task";
@@ -33,7 +33,7 @@ export async function action({ request }: ActionFunctionArgs) {
 			case Intent.moveItem: {
 				const resp = await updateTaskOrder(formData);
 				if (resp === null || resp!.status >= 300) {
-					throw new Response("Failed to move item", { status: resp!.status , statusText : resp!.statusText})
+					throw new Response("Failed to move item", { status: resp!.status, statusText: resp!.statusText })
 				}
 				return await resp?.json();
 			}
@@ -42,8 +42,8 @@ export async function action({ request }: ActionFunctionArgs) {
 					formData.delete("id");
 					// const validData = taskSchema.parse(Object.fromEntries(formData));
 					const resp = await createTask(formData);
-					if(resp === null || resp!.status >= 300 ) {
-						throw new Response("Unable to create new item", {status : resp?.status})
+					if (resp === null || resp!.status >= 300) {
+						throw new Response("Unable to create new item", { status: resp?.status })
 					}
 					return await resp?.json();
 				} catch (e) {
@@ -51,7 +51,24 @@ export async function action({ request }: ActionFunctionArgs) {
 				}
 				break;
 			}
-
+			case Intent.updateItem: {
+				const resp = await updateTask( formData);
+				console.log(resp)
+				if (resp === null || resp!.status >= 300) {
+					throw new Response("Unable to Update Item", { status: resp!.status, statusText: resp!.statusText })
+				}
+				return await resp?.json();
+			}
+			case Intent.deleteItem: {
+				const itemId = String(formData.get("id"));
+				const boardId = String(formData.get("id"));
+				const resp = await deleteTask(boardId, itemId);
+				// return redirect("/app/tasks");
+				if (resp === null || resp!.status >= 300) {
+					throw new Response("Unable to Update Item", { status: resp!.status, statusText: resp!.statusText })
+				}
+				return await resp?.json();
+			}
 			case Intent.createColumn: {
 				const resp = await createColumn(formData);
 				if (resp === null || resp!.status >= 300) {
@@ -60,6 +77,7 @@ export async function action({ request }: ActionFunctionArgs) {
 				return await resp?.json();
 			}
 			default:
+
 				break;
 		}
 	} catch (e) {
